@@ -1,3 +1,4 @@
+//constantes para el paquete mysql, express, body-parser y la conexion a la base de datos
 const mysql = require('mysql');
 const express = require('express');
 const app = express();
@@ -6,6 +7,12 @@ const db = require('./config/db');
 
 app.use(bp.json());
 
+// rutas del modulo de reservacion
+const reservacionRoutes = require('./routes/reservacionRoutes');
+
+// prefijo de las rutas del modulo re
+app.use('/api/re', reservacionRoutes);
+//prefijo de las rutas del modulo de ventas
 app.use(
     '/api',
     require('./routes/ventasRoutes')
