@@ -1,5 +1,5 @@
 //constantes para el paquete mysql, express, body-parser y la conexion a la base de datos
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const express = require('express');
 const app = express();
 const bp = require('body-parser');
