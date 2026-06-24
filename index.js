@@ -17,7 +17,7 @@ app.use(
     '/api',
     require('./routes/ventasRoutes')
 );
-
+//prefijo de las rutas del modulo de personas
 app.use(
     '/api',
     require('./routes/personasRoutes')
