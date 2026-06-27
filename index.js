@@ -27,6 +27,11 @@ app.use(
 const inventarioRoutes = require('./routes/inventarioRoutes');
 app.use('/api/in', inventarioRoutes);
 
+// rutas del modulo de reportes
+const reportesRoutes = require('./routes/reportesRoutes');
+app.use('/api', reportesRoutes);
+
+
 app.listen(3000, () => {
     console.log('Server is running on port 3000');
 });
