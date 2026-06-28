@@ -50,3 +50,24 @@ exports.actualizar = (req, res) => {
         }
     );
 };
+
+/* ==========================
+   PATCH -> SOFT DELETE
+========================== */
+
+exports.eliminar = (req, res) => {
+
+    ventasModel.actualizar(
+        req.body,
+        (error, result) => {
+
+            if (error) {
+                return res.status(500).json(error);
+            }
+
+            res.json({
+                mensaje: 'Registro eliminado correctamente'
+            });
+        }
+    );
+};

@@ -63,3 +63,30 @@ exports.actualizar = (req, res) => {
         }
     );
 };
+
+/* ==========================
+   PATCH -> SOFT DELETE
+========================== */
+
+exports.softDelete = (req, res) => {
+
+    personasModel.softDelete(
+        {
+            cod_persona: req.params.id,
+            usr_ingreso: req.body.usr_ingreso
+        },
+        (error, result) => {
+
+            if (error) {
+                console.log(error);
+                return res.status(500).json(error);
+            }
+
+            res.json({
+                mensaje: 'Registro desactivado correctamente'
+            });
+
+        }
+    );
+
+};

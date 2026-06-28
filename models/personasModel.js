@@ -162,8 +162,68 @@ const actualizar = (datos, callback) => {
     );
 };
 
+/* ==========================
+   PATCH -> SOFT DELETE
+========================== */
+
+const softDelete = (datos, callback) => {
+
+    db.query(
+        `CALL UPD_PERSONAS(
+            ?,?,?,?,?,?,?,?,?,?,
+            ?,?,?,?,?,?,?,?,?,?,
+            ?,?,?,?,?,?,?,?
+        )`,
+        [
+
+            datos.accion || 'SOFT_DELETE',
+
+            datos.cod_persona,
+
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+
+            null,
+            null,
+
+            null,
+            null,
+
+            null,
+            null,
+
+            null,
+            null,
+            null,
+            null,
+            null,
+
+            null,
+            null,
+
+            null,
+            null,
+            null,
+
+            null,
+            null,
+
+            datos.usr_ingreso
+
+        ],
+        callback
+    );
+
+};
+
 module.exports = {
     obtener,
     insertar,
-    actualizar
+    actualizar,
+    softDelete
 };
