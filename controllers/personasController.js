@@ -43,10 +43,15 @@ exports.insertar = (req, res) => {
 };
 
 /* ==========================
-   PUT
+   PUT (UPDATE / SOFT DELETE)
 ========================== */
 
 exports.actualizar = (req, res) => {
+
+    // Si el id viene por la URL y no en el body, lo asignamos.
+    if (req.params.id && !req.body.cod_persona) {
+        req.body.cod_persona = req.params.id;
+    }
 
     personasModel.actualizar(
         req.body,
@@ -57,36 +62,18 @@ exports.actualizar = (req, res) => {
                 return res.status(500).json(error);
             }
 
-            res.json({
-                mensaje: 'Registro actualizado correctamente'
-            });
-        }
-    );
-};
+            if (req.body.accion === 'SOFT_DELETE') {
 
-/* ==========================
-   PATCH -> SOFT DELETE
-========================== */
+                return res.json({
+                    mensaje: 'Registro desactivado correctamente'
+                });
 
-exports.softDelete = (req, res) => {
-
-    personasModel.softDelete(
-        {
-            cod_persona: req.params.id,
-            usr_ingreso: req.body.usr_ingreso
-        },
-        (error, result) => {
-
-            if (error) {
-                console.log(error);
-                return res.status(500).json(error);
             }
 
             res.json({
-                mensaje: 'Registro desactivado correctamente'
+                mensaje: 'Registro actualizado correctamente'
             });
 
         }
     );
-
 };

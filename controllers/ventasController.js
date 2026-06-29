@@ -1,5 +1,9 @@
 const ventasModel = require('../models/ventasModel');
 
+/* ==========================
+   GET
+========================== */
+
 exports.obtener = (req, res) => {
 
     const { accion } = req.query;
@@ -9,6 +13,7 @@ exports.obtener = (req, res) => {
         (error, result) => {
 
             if (error) {
+                console.log(error);
                 return res.status(500).json(error);
             }
 
@@ -17,6 +22,10 @@ exports.obtener = (req, res) => {
     );
 };
 
+/* ==========================
+   POST
+========================== */
+
 exports.insertar = (req, res) => {
 
     ventasModel.insertar(
@@ -24,6 +33,7 @@ exports.insertar = (req, res) => {
         (error, result) => {
 
             if (error) {
+                console.log(error);
                 return res.status(500).json(error);
             }
 
@@ -34,40 +44,35 @@ exports.insertar = (req, res) => {
     );
 };
 
+/* ==========================
+   PUT -> UPDATE / SOFT DELETE
+========================== */
+
 exports.actualizar = (req, res) => {
+
+    req.body.id = req.params.id;
 
     ventasModel.actualizar(
         req.body,
         (error, result) => {
 
             if (error) {
+                console.log(error);
                 return res.status(500).json(error);
+            }
+
+            if (req.body.accion === 'SOFT_DELETE') {
+
+                return res.json({
+                    mensaje: 'Registro eliminado correctamente'
+                });
+
             }
 
             res.json({
                 mensaje: 'Registro actualizado correctamente'
             });
-        }
-    );
-};
 
-/* ==========================
-   PATCH -> SOFT DELETE
-========================== */
-
-exports.eliminar = (req, res) => {
-
-    ventasModel.actualizar(
-        req.body,
-        (error, result) => {
-
-            if (error) {
-                return res.status(500).json(error);
-            }
-
-            res.json({
-                mensaje: 'Registro eliminado correctamente'
-            });
         }
     );
 };

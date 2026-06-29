@@ -107,10 +107,67 @@ const insertar = (datos, callback) => {
 };
 
 /* ==========================
-   PUT -> UPD_PERSONAS
+   PUT -> UPDATE / SOFT DELETE
 ========================== */
 
 const actualizar = (datos, callback) => {
+
+    // Si la acción es SOFT_DELETE
+    if (datos.accion === 'SOFT_DELETE') {
+
+        return db.query(
+            `CALL UPD_PERSONAS(
+                ?,?,?,?,?,?,?,?,?,?,
+                ?,?,?,?,?,?,?,?,?,?,
+                ?,?,?,?,?,?,?,?
+            )`,
+            [
+
+                'SOFT_DELETE',
+
+                datos.cod_persona,
+
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+
+                null,
+                null,
+
+                null,
+                null,
+
+                null,
+                null,
+
+                null,
+                null,
+                null,
+                null,
+                null,
+
+                null,
+                null,
+
+                null,
+                null,
+                null,
+
+                null,
+                null,
+
+                datos.usr_ingreso
+
+            ],
+            callback
+        );
+    }
+
+    // UPDATE NORMAL
 
     db.query(
         `CALL UPD_PERSONAS(
@@ -157,73 +214,14 @@ const actualizar = (datos, callback) => {
             datos.categoria_serv || null,
 
             datos.usr_ingreso || null
-        ],
-        callback
-    );
-};
-
-/* ==========================
-   PATCH -> SOFT DELETE
-========================== */
-
-const softDelete = (datos, callback) => {
-
-    db.query(
-        `CALL UPD_PERSONAS(
-            ?,?,?,?,?,?,?,?,?,?,
-            ?,?,?,?,?,?,?,?,?,?,
-            ?,?,?,?,?,?,?,?
-        )`,
-        [
-
-            datos.accion || 'SOFT_DELETE',
-
-            datos.cod_persona,
-
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-
-            null,
-            null,
-
-            null,
-            null,
-
-            null,
-            null,
-
-            null,
-            null,
-            null,
-            null,
-            null,
-
-            null,
-            null,
-
-            null,
-            null,
-            null,
-
-            null,
-            null,
-
-            datos.usr_ingreso
 
         ],
         callback
     );
-
 };
 
 module.exports = {
     obtener,
     insertar,
-    actualizar,
-    softDelete
+    actualizar
 };

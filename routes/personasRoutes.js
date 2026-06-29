@@ -10,7 +10,6 @@ router.get('/personas', personasController.obtener);
 router.get('/personas/:id', personasController.obtener);
 router.post('/personas', personasController.insertar);
 router.put('/personas/:id', personasController.actualizar);
-router.patch('/personas/:id', personasController.softDelete);
 
 // ==========================================
 // PA_TELEFONOS
@@ -59,7 +58,6 @@ router.get('/usuarios', personasController.obtener);
 router.get('/usuarios/:id', personasController.obtener);
 router.post('/usuarios', personasController.insertar);
 router.put('/usuarios/:id', personasController.actualizar);
-router.patch('/usuarios/:id', personasController.softDelete);
 
 // ==========================================
 // PA_TIPO_CLIENTES

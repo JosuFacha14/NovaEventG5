@@ -1,5 +1,9 @@
 const db = require('../config/db');
 
+/* ==========================
+   GET -> SP_SELECT_VENTAS
+========================== */
+
 const obtener = (accion, callback) => {
 
     db.query(
@@ -7,7 +11,12 @@ const obtener = (accion, callback) => {
         [accion],
         callback
     );
+
 };
+
+/* ==========================
+   POST -> SP_INSERT_VENTAS
+========================== */
 
 const insertar = (datos, callback) => {
 
@@ -63,7 +72,12 @@ const insertar = (datos, callback) => {
         ],
         callback
     );
+
 };
+
+/* ==========================
+   PUT -> UPDATE / SOFT DELETE
+========================== */
 
 const actualizar = (datos, callback) => {
 
@@ -75,18 +89,19 @@ const actualizar = (datos, callback) => {
             ?,?,?,?,?,?
         )`,
         [
+
             datos.accion,
 
-            datos.cod_categoria || null,
+            datos.cod_categoria || datos.id || null,
             datos.nom_categoria || null,
             datos.des_categoria || null,
 
-            datos.cod_ciclo_evento || null,
+            datos.cod_ciclo_evento || datos.id || null,
             datos.nom_ciclo || null,
             datos.des_ciclo || null,
             datos.ind_activo_ciclo || null,
 
-            datos.cod_evento || null,
+            datos.cod_evento || datos.id || null,
             datos.cod_reservacion || null,
             datos.nom_evento || null,
             datos.des_evento || null,
@@ -96,32 +111,34 @@ const actualizar = (datos, callback) => {
             datos.num_capacidad || null,
             datos.ind_estado_evento || null,
 
-            datos.cod_boleto || null,
+            datos.cod_boleto || datos.id || null,
             datos.tip_boleto || null,
             datos.mon_precio || null,
             datos.num_disponible || null,
             datos.des_boleto || null,
 
-            datos.cod_venta || null,
+            datos.cod_venta || datos.id || null,
             datos.cod_cliente || null,
             datos.mon_total || null,
             datos.ind_metodo_pago || null,
             datos.ind_estado_venta || null,
 
-            datos.cod_detalle || null,
+            datos.cod_detalle || datos.id || null,
             datos.num_cantidad || null,
             datos.mon_precio_unit || null,
             datos.mon_subtotal || null,
 
-            datos.cod_pago || null,
+            datos.cod_pago || datos.id || null,
             datos.mon_pago || null,
             datos.cod_referencia || null,
             datos.ind_estado_pago || null,
 
             datos.ind_activo || '1'
+
         ],
         callback
     );
+
 };
 
 module.exports = {
