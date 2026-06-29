@@ -20,7 +20,7 @@ router.post('/espacio', ctrl.insEspacio);
 router.put('/espacio/:id', ctrl.updEspacio);
 
 // cambio de estado del espacio (soft delete)
-router.patch('/espacio/:id/estado', ctrl.softDeleteEspacio);
+router.put('/espacio/:id/estado', ctrl.softDeleteEspacio);
 
 // rutas de reservacion
 
@@ -37,7 +37,7 @@ router.post('/reservacion', ctrl.insReservacion);
 router.put('/reservacion/:id', ctrl.updReservacion);
 
 // cambio de estado de la reservacion (soft delete)
-router.patch('/reservacion/:id/estado', ctrl.softDeleteReservacion);
+router.put('/reservacion/:id/estado', ctrl.softDeleteReservacion);
 
 // rutas de espacio ocupado
 
