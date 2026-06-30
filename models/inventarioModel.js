@@ -1,194 +1,136 @@
 // conexion a la base de datos
 const db = require('../config/db');
 
-/* ==================================================================
-   HELPER: ejecutar un stored procedure y retornar callback estándar
-================================================================== */
-const callProcedure = (sql, params, callback) => {
-  db.query(sql, params, (err, results) => {
-    if (err) return callback(err);
-    // Los SP devuelven un array de result-sets; tomamos el primero con datos
-    const data = Array.isArray(results)
-      ? results.find(r => Array.isArray(r)) ?? results[0]
-      : results;
-    callback(null, data);
-  });
-};
- 
-/* ==========================
-   GET  →  SEL_ALL_INVENTARIO
-   Parámetros: (cod_item, cod_categoria, cod_almacen, cod_evento)
-   Pasar NULL en los que no apliquen.
-========================== */
- 
-// Todos los items (sin filtro)
-const getAllItems = (callback) => {
-  callProcedure(
-    'CALL SEL_ALL_INVENTARIO(?, ?, ?, ?)',
-    [null, null, null, null],
-    callback
-  );
-};
- 
-// Item por código
-const getItemById = (cod_item, callback) => {
-  callProcedure(
-    'CALL SEL_ALL_INVENTARIO(?, ?, ?, ?)',
-    [cod_item, null, null, null],
-    callback
-  );
-};
- 
-// Items por categoría
-const getItemsByCategoria = (cod_categoria, callback) => {
-  callProcedure(
-    'CALL SEL_ALL_INVENTARIO(?, ?, ?, ?)',
-    [null, cod_categoria, null, null],
-    callback
-  );
-};
- 
-// Items por almacén
-const getItemsByAlmacen = (cod_almacen, callback) => {
-  callProcedure(
-    'CALL SEL_ALL_INVENTARIO(?, ?, ?, ?)',
-    [null, null, cod_almacen, null],
-    callback
-  );
-};
- 
-// Items por evento (reservas + asignaciones)
-const getItemsByEvento = (cod_evento, callback) => {
-  callProcedure(
-    'CALL SEL_ALL_INVENTARIO(?, ?, ?, ?)',
-    [null, null, null, cod_evento],
-    callback
-  );
-};
- 
-/* ==========================
-   POST  →  INSERT_INVENTARIO
-   Inserta ítem y opcionalmente categoría, almacén, reserva y asignación.
-========================== */
-const insertInventario = (datos, callback) => {
+// sp_in_insert
+
+// insertar item de inventario (puede incluir categoria, almacen, reserva y asignacion en el mismo registro)
+const insItem = (datos, callback) => {
   const {
-    // Categoría (opcional)
-    COD_CATEGORIA, NOM_CATEGORIA, DES_CATEGORIA, DES_ICONO,
-    // Almacén (opcional)
-    COD_ALMACEN, NOM_ALMACEN, DIR_UBICACION, COD_EMPLEADO, CAN_CAPACIDAD,
-    // Ítem (obligatorio)
-    COD_ITEM, NOM_ITEM, DES_ITEM,
-    CAN_TOTAL, CAN_DISPONIBLE, COD_ITEM_UNICO, IMG_FOTO_URL,
-    FEC_ADQUISICION, MON_COSTO,
-    // Reserva (opcional)
-    COD_RESERVA, COD_EVENTO_RES, CAN_RESERVADA,
-    FEC_INICIO_RESERVA, FEC_FIN_RESERVA, NOM_SOLICITANTE, DES_NOTAS,
-    // Asignación (opcional)
-    COD_ASIGNACION, COD_EVENTO_ASIG, CAN_ASIGNADA,
-    FEC_SALIDA, FEC_RETORNO, NOM_RESPONSABLE, DES_OBSERVACIONES,
-    // Usuario
-    USR_REGISTRO
+    cod_categoria, nom_categoria, des_categoria, des_icono,
+    cod_almacen, nom_almacen, dir_ubicacion, cod_empleado, can_capacidad,
+    cod_item, nom_item, des_item, can_total, can_disponible, cod_item_unico, img_foto_url, fec_adquisicion, mon_costo,
+    cod_reserva, cod_evento_res, can_reservada, fec_inicio_res, fec_fin_res, nom_solicitante, des_notas_res,
+    cod_asignacion, cod_evento_asig, can_asignada, fec_salida, fec_retorno, nom_resp_asig, des_observaciones,
+    usr_registro
   } = datos;
- 
-  callProcedure(
-    `CALL INSERT_INVENTARIO(
-      ?, ?, ?, ?,
-      ?, ?, ?, ?, ?,
-      ?, ?, ?, ?, ?, ?, ?, ?, ?,
-      ?, ?, ?, ?, ?, ?, ?,
-      ?, ?, ?, ?, ?, ?, ?, ?)`,
+
+  db.query(
+    'CALL INSERT_INVENTARIO(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
     [
-      COD_CATEGORIA     || null, NOM_CATEGORIA  || null, DES_CATEGORIA  || null, DES_ICONO      || null,
-      COD_ALMACEN       || null, NOM_ALMACEN    || null, DIR_UBICACION  || null,
-      COD_EMPLEADO      || null, CAN_CAPACIDAD  || null,
-      COD_ITEM,                  NOM_ITEM,                DES_ITEM,
-      CAN_TOTAL,                 CAN_DISPONIBLE || CAN_TOTAL,
-      COD_ITEM_UNICO    || null, IMG_FOTO_URL   || null,
-      FEC_ADQUISICION   || null, MON_COSTO      || null,
-      COD_RESERVA       || null, COD_EVENTO_RES || null, CAN_RESERVADA  || null,
-      FEC_INICIO_RESERVA|| null, FEC_FIN_RESERVA|| null,
-      NOM_SOLICITANTE   || null, DES_NOTAS      || null,
-      COD_ASIGNACION    || null, COD_EVENTO_ASIG|| null, CAN_ASIGNADA   || null,
-      FEC_SALIDA        || null, FEC_RETORNO    || null,
-      NOM_RESPONSABLE   || null, DES_OBSERVACIONES || null,
-      USR_REGISTRO
+      cod_categoria || null, nom_categoria || null, des_categoria || null, des_icono || null,
+      cod_almacen || null, nom_almacen || null, dir_ubicacion || null, cod_empleado || null, can_capacidad || null,
+      cod_item || null, nom_item, des_item || null, can_total, can_disponible, cod_item_unico || null, img_foto_url || null, fec_adquisicion || null, mon_costo || null,
+      cod_reserva || null, cod_evento_res || null, can_reservada || null, fec_inicio_res || null, fec_fin_res || null, nom_solicitante || null, des_notas_res || null,
+      cod_asignacion || null, cod_evento_asig || null, can_asignada || null, fec_salida || null, fec_retorno || null, nom_resp_asig || null, des_observaciones || null,
+      usr_registro
     ],
     callback
   );
 };
- 
-/* ==========================
-   PUT  →  SP_IN_UPDATE
-   Cubre UPDATE normal y Soft Delete según PV_ACCION:
-     null            → UPDATE de los campos que se pasen
-     'DEL_IN_ITEM'       → Soft delete de ítem
-     'DEL_IN_CATEGORIA'  → Soft delete de categoría
-     'DEL_IN_ALMACEN'    → Soft delete de almacén
-========================== */
-const updateInventario = (datos, callback) => {
-  const {
-    ACCION,
-    USR_REGISTRO,
-    // Ítem
-    COD_ITEM, NOM_ITEM, DES_ITEM,
-    CAN_TOTAL, CAN_DISPONIBLE, IND_ESTADO,
-    COD_ITEM_UNICO, IMG_FOTO_URL, FEC_ADQUISICION, MON_COSTO,
-    // Categoría
-    COD_CATEGORIA, NOM_CATEGORIA, DES_CATEGORIA, DES_ICONO,
-    // Almacén
-    COD_ALMACEN, NOM_ALMACEN, DIR_UBICACION, COD_EMPLEADO, CAN_CAPACIDAD,
-    // Reserva
-    COD_RESERVA, CAN_RESERVADA, FEC_INICIO_RESERVA, FEC_FIN_RESERVA,
-    IND_ESTADO_RESERVA, NOM_SOLICITANTE, DES_NOTAS,
-    // Asignación
-    COD_ASIGNACION, CAN_ASIGNADA, FEC_SALIDA, FEC_RETORNO,
-    IND_ESTADO_ASIG, IND_CONDICION, NOM_RESPONSABLE, DES_OBSERVACIONES
-  } = datos;
- 
-  callProcedure(
-    `CALL SP_IN_UPDATE(
-      ?, ?,
-      ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-      ?, ?, ?, ?,
-      ?, ?, ?, ?, ?,
-      ?, ?, ?, ?, ?, ?, ?,
-      ?, ?, ?, ?, ?, ?, ?, ?)`,
-    [
-      ACCION        || null, USR_REGISTRO,
-      // Ítem
-      COD_ITEM      || null, NOM_ITEM          || null, DES_ITEM          || null,
-      CAN_TOTAL     || null, CAN_DISPONIBLE     || null, IND_ESTADO        || null,
-      COD_ITEM_UNICO|| null, IMG_FOTO_URL       || null,
-      FEC_ADQUISICION|| null, MON_COSTO         || null,
-      // Categoría
-      COD_CATEGORIA || null, NOM_CATEGORIA      || null,
-      DES_CATEGORIA || null, DES_ICONO          || null,
-      // Almacén
-      COD_ALMACEN   || null, NOM_ALMACEN        || null,
-      DIR_UBICACION || null, COD_EMPLEADO        || null, CAN_CAPACIDAD    || null,
-      // Reserva
-      COD_RESERVA   || null, CAN_RESERVADA       || null,
-      FEC_INICIO_RESERVA || null, FEC_FIN_RESERVA|| null,
-      IND_ESTADO_RESERVA || null, NOM_SOLICITANTE|| null, DES_NOTAS        || null,
-      // Asignación
-      COD_ASIGNACION|| null, CAN_ASIGNADA        || null,
-      FEC_SALIDA    || null, FEC_RETORNO          || null,
-      IND_ESTADO_ASIG || null, IND_CONDICION      || null,
-      NOM_RESPONSABLE || null, DES_OBSERVACIONES  || null
-    ],
+
+// sp_in_update
+
+// actualizar item
+const updItem = (datos, callback) => {
+  const { usr_registro, cod_item, nom_item, des_item, can_total, can_disponible, ind_estado, cod_item_unico, img_foto_url, fec_adquisicion, mon_costo } = datos;
+  db.query(
+    'CALL SP_IN_UPDATE(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)',
+    [usr_registro, cod_item, nom_item || null, des_item || null, can_total || null, can_disponible || null, ind_estado || null, cod_item_unico || null, img_foto_url || null, fec_adquisicion || null, mon_costo || null],
     callback
   );
 };
- 
+
+// actualizar categoria
+const updCategoria = (datos, callback) => {
+  const { usr_registro, cod_categoria, nom_categoria, des_categoria, des_icono } = datos;
+  db.query(
+    'CALL SP_IN_UPDATE(NULL, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, ?, ?, ?, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)',
+    [usr_registro, cod_categoria, nom_categoria, des_categoria || null, des_icono || null],
+    callback
+  );
+};
+
+// actualizar almacen
+const updAlmacen = (datos, callback) => {
+  const { usr_registro, cod_almacen, nom_almacen, dir_ubicacion, cod_empleado, can_capacidad } = datos;
+  db.query(
+    'CALL SP_IN_UPDATE(NULL, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, ?, ?, ?, ?, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)',
+    [usr_registro, cod_almacen, nom_almacen, dir_ubicacion || null, cod_empleado || null, can_capacidad || null],
+    callback
+  );
+};
+
+// actualizar reserva de inventario (incluye cancelacion, que repone la cantidad disponible del item)
+const updReserva = (datos, callback) => {
+  const { usr_registro, cod_reserva, can_reservada, fec_inicio_res, fec_fin_res, ind_estado_res, nom_solicitante, des_notas_res } = datos;
+  db.query(
+    'CALL SP_IN_UPDATE(NULL, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, ?, ?, ?, ?, ?, ?, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)',
+    [usr_registro, cod_reserva, can_reservada || null, fec_inicio_res || null, fec_fin_res || null, ind_estado_res || null, nom_solicitante || null, des_notas_res || null],
+    callback
+  );
+};
+
+// actualizar asignacion a evento (retornado/perdido ajustan automaticamente las cantidades del item)
+const updAsignacion = (datos, callback) => {
+  const { usr_registro, cod_asignacion, can_asignada, fec_salida, fec_retorno, ind_estado_asig, ind_condicion, nom_resp_asig, des_observaciones } = datos;
+  db.query(
+    'CALL SP_IN_UPDATE(NULL, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, ?, ?, ?, ?, ?, ?, ?, ?)',
+    [usr_registro, cod_asignacion, can_asignada || null, fec_salida || null, fec_retorno || null, ind_estado_asig || null, ind_condicion || null, nom_resp_asig || null, des_observaciones || null],
+    callback
+  );
+};
+
+// soft delete item (ind_estado = BAJA)
+const softDeleteItem = (datos, callback) => {
+  const { usr_registro, cod_item } = datos;
+  db.query(
+    'CALL SP_IN_UPDATE(?, ?, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)',
+    ['DEL_IN_ITEM', usr_registro, cod_item],
+    callback
+  );
+};
+
+// soft delete categoria (ind_activa = false)
+const softDeleteCategoria = (datos, callback) => {
+  const { usr_registro, cod_categoria } = datos;
+  db.query(
+    'CALL SP_IN_UPDATE(?, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)',
+    ['DEL_IN_CATEGORIA', usr_registro, cod_categoria],
+    callback
+  );
+};
+
+// soft delete almacen (ind_activo = false)
+const softDeleteAlmacen = (datos, callback) => {
+  const { usr_registro, cod_almacen } = datos;
+  db.query(
+    'CALL SP_IN_UPDATE(?, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)',
+    ['DEL_IN_ALMACEN', usr_registro, cod_almacen],
+    callback
+  );
+};
+
+// sp_in_select
+
+// obtener inventario con filtros opcionales (item, categoria, almacen o evento)
+const selInventario = (filtros, callback) => {
+  const { cod_item, cod_categoria, cod_almacen, cod_evento } = filtros || {};
+  db.query(
+    'CALL SEL_ALL_INVENTARIO(?, ?, ?, ?)',
+    [cod_item || null, cod_categoria || null, cod_almacen || null, cod_evento || null],
+    callback
+  );
+};
+
 module.exports = {
-  // GET
-  getAllItems,
-  getItemById,
-  getItemsByCategoria,
-  getItemsByAlmacen,
-  getItemsByEvento,
-  // POST
-  insertInventario,
-  // PUT (update + soft delete)
-  updateInventario
+  insItem,
+  updItem,
+  updCategoria,
+  updAlmacen,
+  updReserva,
+  updAsignacion,
+  softDeleteItem,
+  softDeleteCategoria,
+  softDeleteAlmacen,
+  selInventario
 };
