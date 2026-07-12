@@ -7,3 +7,5 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', fn () => view('admin.dashboard'))->name('dashboard');
+//ruta de personas
+require base_path('routes/personas.php');

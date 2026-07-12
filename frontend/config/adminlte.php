@@ -214,17 +214,35 @@ return [
     'menu' => [
     ['header' => 'MAIN'],
     ['text' => 'Dashboard', 'route' => 'dashboard', 'icon' => 'bi bi-speedometer'],
-    ['text' => 'Users', 'url' => 'users', 'icon' => 'bi bi-people',
-     'can' => 'view-users', 'label' => 5, 'label_color' => 'danger'],
-    ['header' => 'CONTENT'],
+
+    ['header' => 'MÓDULOS'],
     [
-        'text' => 'Posts',
-        'icon' => 'bi bi-file-post',
+        'text'    => 'Personas',
+        'icon'    => 'bi bi-people',
         'submenu' => [
-            ['text' => 'All posts', 'url' => 'posts'],
-            ['text' => 'New post', 'url' => 'posts/create'],
+            [
+                'text'   => 'Gestión de Personas',
+                'url'    => 'personas',
+                'icon'   => 'bi bi-person-lines-fill',
+                'active' => ['personas', 'personas/*'],
+            ],
+            [
+                'text'   => 'Tipos de Usuario',
+                'url'    => 'tipos-usuario',
+                'icon'   => 'bi bi-shield-lock',
+                'active' => ['tipos-usuario*'],
+            ],
+            [
+                'text'   => 'Tipos de Cliente',
+                'url'    => 'tipos-cliente',
+                'icon'   => 'bi bi-person-badge',
+                'active' => ['tipos-cliente*'],
+            ],
         ],
     ],
+
+    // Aquí irán los demás módulos después:
+    // Reservación, Ventas, Inventario, Reportes
 ],
 
     /*
