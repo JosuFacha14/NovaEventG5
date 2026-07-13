@@ -17,7 +17,7 @@ return [
     |
     */
 
-    'title' => 'AdminLTE 4',
+    'title' => 'NovaEvent',
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -212,13 +212,18 @@ return [
     */
 
     'menu' => [
+
+    /* ── MAIN ──────────────────────────────────────────────── */
     ['header' => 'MAIN'],
     ['text' => 'Dashboard', 'route' => 'dashboard', 'icon' => 'bi bi-speedometer'],
 
+    /* ── MÓDULOS ────────────────────────────────────────────── */
     ['header' => 'MÓDULOS'],
+
+    /* ── Personas ── */
     [
         'text'    => 'Personas',
-        'icon'    => 'bi bi-people',
+        'icon'    => 'bi bi-people-fill',
         'submenu' => [
             [
                 'text'   => 'Gestión de Personas',
@@ -230,19 +235,60 @@ return [
                 'text'   => 'Tipos de Usuario',
                 'url'    => 'tipos-usuario',
                 'icon'   => 'bi bi-shield-lock',
-                'active' => ['tipos-usuario*'],
+                'active' => ['tipos-usuario', 'tipos-usuario/*'],
             ],
             [
                 'text'   => 'Tipos de Cliente',
                 'url'    => 'tipos-cliente',
                 'icon'   => 'bi bi-person-badge',
-                'active' => ['tipos-cliente*'],
+                'active' => ['tipos-cliente', 'tipos-cliente/*'],
+            ],
+            [
+                'text'   => 'Usuarios',
+                'url'    => 'usuarios',
+                'icon'   => 'bi bi-person-check-fill',
+                'active' => ['usuarios', 'usuarios/*'],
+            ],
+            [
+                'text'   => 'Clientes',
+                'url'    => 'clientes',
+                'icon'   => 'bi bi-person-heart',
+                'active' => ['clientes', 'clientes/*'],
+            ],
+            [
+                'text'   => 'Empleados',
+                'url'    => 'empleados',
+                'icon'   => 'bi bi-briefcase-fill',
+                'active' => ['empleados', 'empleados/*'],
+            ],
+            [
+                'text'   => 'Proveedores',
+                'url'    => 'proveedores',
+                'icon'   => 'bi bi-truck',
+                'active' => ['proveedores', 'proveedores/*'],
             ],
         ],
     ],
 
-    // Aquí irán los demás módulos después:
-    // Reservación, Ventas, Inventario, Reportes
+    /* ── Reservaciones ── */
+    [
+        'text'    => 'Reservaciones',
+        'icon'    => 'bi bi-calendar-check-fill',
+        'submenu' => [
+            [
+                'text'   => 'Espacios',
+                'url'    => 'espacios',
+                'icon'   => 'bi bi-building',
+                'active' => ['espacios*'],
+            ],
+            [
+                'text'   => 'Reservaciones',
+                'url'    => 'reservaciones',
+                'icon'   => 'bi bi-calendar2-event',
+                'active' => ['reservaciones*'],
+            ],
+        ],
+    ],
 ],
 
     /*
