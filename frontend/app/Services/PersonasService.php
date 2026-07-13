@@ -96,76 +96,116 @@ class PersonasService
 
     public function obtenerTelefonosDePersona(int $idPersona): array
     {
-        return $this->get('personas-telefonos', [
+        // 1) Obtener las relaciones persona-teléfono (solo trae COD_TELEFONO)
+        $relaciones = $this->get('personas-telefonos', [
             'accion'      => 'SEL_REL_PERSONAS_TELEFONOS',
             'cod_persona' => $idPersona,
         ]);
+
+        // 2) Enriquecer cada relación con los datos reales del teléfono
+        $telefonos = [];
+        foreach ($relaciones as $rel) {
+            $codTel = $rel['COD_TELEFONO'] ?? null;
+            if ($codTel && $codTel > 0) {
+                try {
+                    $datosTel = $this->get('telefonos', [
+                        'accion'       => 'SEL_PA_TELEFONOS',
+                        'cod_telefono' => $codTel,
+                    ]);
+                    // Combinar la relación con los datos del teléfono
+                    $telefonos[] = array_merge($rel, $datosTel[0] ?? []);
+                } catch (\Throwable $e) {
+                    // Si falla, al menos mostrar lo que hay
+                    $telefonos[] = $rel;
+                }
+            } else {
+                $telefonos[] = $rel;
+            }
+        }
+
+        return $telefonos;
     }
 
     public function obtenerCorreosDePersona(int $idPersona): array
     {
-        return $this->get('personas-correos', [
+        // 1) Obtener las relaciones persona-correo (solo trae COD_CORREO)
+        $relaciones = $this->get('personas-correos', [
             'accion'      => 'SEL_REL_PERSONAS_CORREOS',
             'cod_persona' => $idPersona,
         ]);
+
+        // 2) Enriquecer cada relación con los datos reales del correo
+        $correos = [];
+        foreach ($relaciones as $rel) {
+            $codCor = $rel['COD_CORREO'] ?? null;
+            if ($codCor && $codCor > 0) {
+                try {
+                    $datosCor = $this->get('correos', [
+                        'accion'     => 'SEL_PA_CORREOS',
+                        'cod_correo' => $codCor,
+                    ]);
+                    $correos[] = array_merge($rel, $datosCor[0] ?? []);
+                } catch (\Throwable $e) {
+                    $correos[] = $rel;
+                }
+            } else {
+                $correos[] = $rel;
+            }
+        }
+
+        return $correos;
     }
     public function agregarTelefono(int $idPersona, array $datos): array
-{
-    // 1) Insertar el número en PA_TELEFONOS
-    $telefono = $this->post('telefonos', array_merge(
-        ['accion' => 'INS_TELEFONO'],
-        $datos // num_area, num_telefono, tip_telefono, usr_ingreso
-    ));
- 
-    $codTelefono = $telefono['NUEVO_ID']
-        ?? $telefono['nuevo_id']
-        ?? $telefono['insertId']
-        ?? $telefono['cod_telefono']
-        ?? null;
- 
-    if (!$codTelefono) {
-        throw new \RuntimeException(
-            'El teléfono se insertó pero la API no devolvió el ID. Respuesta recibida: ' . json_encode($telefono)
-        );
+    {
+        // Paso 1: Insertar el teléfono en PA_TELEFONOS
+        $telefono = $this->post('telefonos', array_merge(
+            ['accion' => 'INS_TELEFONO'],
+            $datos // num_area, num_telefono, tip_telefono, usr_ingreso
+        ));
+
+        $codTelefono = $telefono['NUEVO_ID'] ?? null;
+
+        if (!$codTelefono) {
+            throw new \RuntimeException(
+                'El teléfono se insertó pero la API no devolvió el ID.'
+            );
+        }
+
+        // Paso 2: Vincular el teléfono a la persona
+        // El SP usa PI_COD_TIPO_USR (campo cod_tipo_usr) como COD_TELEFONO
+        return $this->post('personas-telefonos', [
+            'accion'       => 'INS_REL_PERSONA_TELEFONO',
+            'cod_persona'  => $idPersona,
+            'cod_tipo_usr' => $codTelefono,
+            'usr_ingreso'  => $datos['usr_ingreso'] ?? 'admin',
+        ]);
     }
  
-    // 2) Vincular el teléfono recién creado a la persona
-    return $this->post('personas-telefonos', [
-        'accion'       => 'INS_REL_PERSONA_TELEFONO',
-        'cod_persona'  => $idPersona,
-        'cod_telefono' => $codTelefono,
-        'usr_ingreso'  => $datos['usr_ingreso'] ?? 'admin',
-    ]);
-}
- 
-public function agregarCorreo(int $idPersona, array $datos): array
-{
-    // 1) Insertar el correo en PA_CORREOS
-    $correo = $this->post('correos', array_merge(
-        ['accion' => 'INS_CORREO'],
-        $datos // usuario_correo, servidor_correo, tip_correo, usr_ingreso
-    ));
- 
-    $codCorreo = $correo['NUEVO_ID']
-        ?? $correo['nuevo_id']
-        ?? $correo['insertId']
-        ?? $correo['cod_correo']
-        ?? null;
- 
-    if (!$codCorreo) {
-        throw new \RuntimeException(
-            'El correo se insertó pero la API no devolvió el ID. Respuesta recibida: ' . json_encode($correo)
-        );
+    public function agregarCorreo(int $idPersona, array $datos): array
+    {
+        // Paso 1: Insertar el correo en PA_CORREOS
+        $correo = $this->post('correos', array_merge(
+            ['accion' => 'INS_CORREO'],
+            $datos // usuario_correo, servidor_correo, tip_correo, usr_ingreso
+        ));
+
+        $codCorreo = $correo['NUEVO_ID'] ?? null;
+
+        if (!$codCorreo) {
+            throw new \RuntimeException(
+                'El correo se insertó pero la API no devolvió el ID.'
+            );
+        }
+
+        // Paso 2: Vincular el correo a la persona
+        // El SP usa PI_COD_TIPO_USR (campo cod_tipo_usr) como COD_CORREO
+        return $this->post('personas-correos', [
+            'accion'       => 'INS_REL_PERSONA_CORREO',
+            'cod_persona'  => $idPersona,
+            'cod_tipo_usr' => $codCorreo,
+            'usr_ingreso'  => $datos['usr_ingreso'] ?? 'admin',
+        ]);
     }
- 
-    // 2) Vincular el correo recién creado a la persona
-    return $this->post('personas-correos', [
-        'accion'      => 'INS_REL_PERSONA_CORREO',
-        'cod_persona' => $idPersona,
-        'cod_correo'  => $codCorreo,
-        'usr_ingreso' => $datos['usr_ingreso'] ?? 'admin',
-    ]);
-}
 
     public function obtenerUsuarioDePersona(int $idPersona): array
     {

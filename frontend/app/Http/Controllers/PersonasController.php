@@ -200,7 +200,28 @@ class PersonasController extends Controller
 
         return redirect()->route('tipos-cliente.index');
     }
-      public function storeCorreo(Request $request, int $id)
+    public function storeTelefono(Request $request, int $id)
+    {
+        $request->validate([
+            'num_area'      => 'required|integer',
+            'num_telefono'  => 'required|integer',
+            'tip_telefono'  => 'required|in:C,O,P',
+        ]);
+
+        try {
+            $this->svc->agregarTelefono($id, array_merge(
+                $request->only(['num_area', 'num_telefono', 'tip_telefono']),
+                ['usr_ingreso' => session('usuario', 'admin')]
+            ));
+            session()->flash('success', 'Teléfono agregado correctamente.');
+        } catch (Throwable $e) {
+            session()->flash('error', 'Error al agregar teléfono: ' . $e->getMessage());
+        }
+
+        return redirect()->route('personas.show', $id);
+    }
+
+    public function storeCorreo(Request $request, int $id)
 {
     $request->validate([
         'usuario_correo'  => 'required|string|max:200',
