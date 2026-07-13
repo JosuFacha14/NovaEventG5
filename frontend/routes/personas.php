@@ -20,7 +20,8 @@ Route::prefix('personas')->name('personas.')->group(function () {
     Route::post('/',       [PersonasController::class, 'store'])  ->name('store');
     Route::get('/{id}',    [PersonasController::class, 'show'])   ->name('show');
     Route::put('/{id}',    [PersonasController::class, 'update']) ->name('update');
-
+    Route::post('/{id}/telefonos', [PersonasController::class, 'storeTelefono']) ->name('telefonos.store');
+    Route::post('/{id}/correos',   [PersonasController::class, 'storeCorreo'])   ->name('correos.store');
 });
 
 // -----------------------------------------------------------------------
@@ -40,5 +41,5 @@ Route::prefix('tipos-cliente')->name('tipos-cliente.')->group(function () {
 
     Route::get('/',  [PersonasController::class, 'tiposClienteIndex']) ->name('index');
     Route::post('/', [PersonasController::class, 'tiposClienteStore']) ->name('store');
-
+    
 });

@@ -200,4 +200,26 @@ class PersonasController extends Controller
 
         return redirect()->route('tipos-cliente.index');
     }
+      public function storeCorreo(Request $request, int $id)
+{
+    $request->validate([
+        'usuario_correo'  => 'required|string|max:200',
+        'servidor_correo' => 'required|string|max:200',
+        'tip_correo'      => 'required|in:P,O',
+    ]);
+ 
+    try {
+        $this->svc->agregarCorreo($id, array_merge(
+            $request->only(['usuario_correo', 'servidor_correo', 'tip_correo']),
+            ['usr_ingreso' => session('usuario', 'admin')]
+        ));
+        session()->flash('success', 'Correo agregado correctamente.');
+    } catch (Throwable $e) {
+        session()->flash('error', 'Error al agregar correo: ' . $e->getMessage());
+    }
+ 
+    return redirect()->route('personas.show', $id);
+}
+ 
+ 
 }

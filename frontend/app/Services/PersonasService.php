@@ -109,6 +109,63 @@ class PersonasService
             'cod_persona' => $idPersona,
         ]);
     }
+    public function agregarTelefono(int $idPersona, array $datos): array
+{
+    // 1) Insertar el número en PA_TELEFONOS
+    $telefono = $this->post('telefonos', array_merge(
+        ['accion' => 'INS_TELEFONO'],
+        $datos // num_area, num_telefono, tip_telefono, usr_ingreso
+    ));
+ 
+    $codTelefono = $telefono['NUEVO_ID']
+        ?? $telefono['nuevo_id']
+        ?? $telefono['insertId']
+        ?? $telefono['cod_telefono']
+        ?? null;
+ 
+    if (!$codTelefono) {
+        throw new \RuntimeException(
+            'El teléfono se insertó pero la API no devolvió el ID. Respuesta recibida: ' . json_encode($telefono)
+        );
+    }
+ 
+    // 2) Vincular el teléfono recién creado a la persona
+    return $this->post('personas-telefonos', [
+        'accion'       => 'INS_REL_PERSONA_TELEFONO',
+        'cod_persona'  => $idPersona,
+        'cod_telefono' => $codTelefono,
+        'usr_ingreso'  => $datos['usr_ingreso'] ?? 'admin',
+    ]);
+}
+ 
+public function agregarCorreo(int $idPersona, array $datos): array
+{
+    // 1) Insertar el correo en PA_CORREOS
+    $correo = $this->post('correos', array_merge(
+        ['accion' => 'INS_CORREO'],
+        $datos // usuario_correo, servidor_correo, tip_correo, usr_ingreso
+    ));
+ 
+    $codCorreo = $correo['NUEVO_ID']
+        ?? $correo['nuevo_id']
+        ?? $correo['insertId']
+        ?? $correo['cod_correo']
+        ?? null;
+ 
+    if (!$codCorreo) {
+        throw new \RuntimeException(
+            'El correo se insertó pero la API no devolvió el ID. Respuesta recibida: ' . json_encode($correo)
+        );
+    }
+ 
+    // 2) Vincular el correo recién creado a la persona
+    return $this->post('personas-correos', [
+        'accion'      => 'INS_REL_PERSONA_CORREO',
+        'cod_persona' => $idPersona,
+        'cod_correo'  => $codCorreo,
+        'usr_ingreso' => $datos['usr_ingreso'] ?? 'admin',
+    ]);
+}
 
     public function obtenerUsuarioDePersona(int $idPersona): array
     {
@@ -141,6 +198,7 @@ class PersonasService
             'cod_persona' => $idPersona,
         ]);
     }
+    
 
     /* ================================================================== */
     /*  PA_TIPO_USUARIOS                                                    */
