@@ -289,6 +289,44 @@ return [
             ],
         ],
     ],
+
+        /* ── Ventas ── */
+    [
+        'text'    => 'Ventas',
+        'icon'    => 'bi bi-cash-register',
+        'submenu' => [
+            [
+                'text'   => 'Categorías de Evento',
+                'route'  => 'categorias-evento.index',
+                'icon'   => 'bi bi-tags-fill',
+                'active' => ['categorias-evento', 'categorias-evento/*'],
+            ],
+            [
+                'text'   => 'Ciclos de Evento',
+                'url'    => 'ciclos-evento',
+                'icon'   => 'bi bi-arrow-repeat',
+                'active' => ['ciclos-evento', 'ciclos-evento/*'],
+            ],
+            [
+                'text'   => 'Eventos',
+                'url'    => 'eventos',
+                'icon'   => 'bi bi-calendar-event-fill',
+                'active' => ['eventos', 'eventos/*'],
+            ],
+            [
+                'text'   => 'Boletos',
+                'url'    => 'boletos',
+                'icon'   => 'bi bi-ticket-perforated-fill',
+                'active' => ['boletos', 'boletos/*'],
+            ],
+            [
+                'text'   => 'Gestión de Ventas',
+                'url'    => 'ventas',
+                'icon'   => 'bi bi-cart-check-fill',
+                'active' => ['ventas', 'ventas/*'],
+            ],
+        ],
+    ],
 ],
 
     /*
