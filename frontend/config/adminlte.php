@@ -282,10 +282,22 @@ return [
                 'active' => ['espacios*'],
             ],
             [
-                'text'   => 'Reservaciones',
+                'text'   => 'Gestión Reservaciones',
                 'url'    => 'reservaciones',
                 'icon'   => 'bi bi-calendar2-event',
                 'active' => ['reservaciones*'],
+            ],
+            [
+                'text'   => 'Bloqueos de Espacios',
+                'url'    => 'espacios-ocupados',
+                'icon'   => 'bi bi-shield-lock',
+                'active' => ['espacios-ocupados*'],
+            ],
+            [
+                'text'   => 'Historial',
+                'url'    => 'historial-reservaciones',
+                'icon'   => 'bi bi-clock-history',
+                'active' => ['historial-reservaciones*'],
             ],
         ],
     ],
