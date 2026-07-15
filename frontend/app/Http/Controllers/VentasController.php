@@ -1001,7 +1001,6 @@ public function ventasIndex()
     );
 }
 
-
 public function ventasStore(Request $request)
 {
     $request->validate([
