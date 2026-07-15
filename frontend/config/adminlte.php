@@ -305,7 +305,7 @@ return [
         /* ── Ventas ── */
     [
         'text'    => 'Ventas',
-        'icon'    => 'bi bi-cash-register',
+        'icon' => 'bi bi-cart-fill',
         'submenu' => [
             [
                 'text'   => 'Categorías de Evento',
