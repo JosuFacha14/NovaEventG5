@@ -5,7 +5,7 @@ const mysqlConnection = mysql.createPool({
   host: 'localhost',
   port: 3306,
   user: 'root',
-  password: '',
+  password: 'Joel1234',
   database: 'BDNovaEventG5',
   multipleStatements: true,
   waitForConnections: true,

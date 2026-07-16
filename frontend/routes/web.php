@@ -16,3 +16,6 @@ require base_path('routes/reservacion.php');
 
 // Rutas del módulo Ventas
 require base_path('routes/ventas.php');
+
+// Rutas del módulo Inventario
+require base_path('routes/inventario.php');

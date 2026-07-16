@@ -95,6 +95,38 @@ const selTodos = (req, res) => {
   });
 };
 
+// obtener todas las reservas de inventario
+const selReservas = (req, res) => {
+  model.selInventario({}, (err, result) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.status(200).json(result[3] || []);
+  });
+};
+
+// obtener todas las asignaciones a evento
+const selAsignaciones = (req, res) => {
+  model.selInventario({}, (err, result) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.status(200).json(result[4] || []);
+  });
+};
+
+// obtener todas las categorias activas
+const selCategorias = (req, res) => {
+  model.selInventario({}, (err, result) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.status(200).json(result[1] || []);
+  });
+};
+
+// obtener todos los almacenes activos
+const selAlmacenes = (req, res) => {
+  model.selInventario({}, (err, result) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.status(200).json(result[2] || []);
+  });
+};
+
 // obtener item por id (detalle completo con categoria y almacen)
 const selItem = (req, res) => {
   model.selInventario({ cod_item: req.params.id }, (err, result) => {
@@ -139,7 +171,11 @@ module.exports = {
   softDeleteAlmacen,
   selTodos,
   selItem,
+  selCategorias,
+  selAlmacenes,
   selPorCategoria,
   selPorAlmacen,
-  selPorEvento
+  selPorEvento,
+  selReservas,
+  selAsignaciones
 };

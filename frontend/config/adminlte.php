@@ -339,6 +339,44 @@ return [
             ],
         ],
     ],
+
+    /* ── Inventario ── */
+    [
+        'text'    => 'Inventario',
+        'icon'    => 'bi bi-boxes',
+        'submenu' => [
+            [
+                'text'   => 'Catálogo Categorías',
+                'url'    => 'inventario/categorias',
+                'icon'   => 'bi bi-tag-fill',
+                'active' => ['inventario/categorias', 'inventario/categorias/*'],
+            ],
+            [
+                'text'   => 'Gestión de Almacenes',
+                'url'    => 'inventario/almacenes',
+                'icon'   => 'bi bi-building-fill',
+                'active' => ['inventario/almacenes', 'inventario/almacenes/*'],
+            ],
+            [
+                'text'   => 'Gestión de Ítems',
+                'url'    => 'inventario/items',
+                'icon'   => 'bi bi-box-seam-fill',
+                'active' => ['inventario/items', 'inventario/items/*'],
+            ],
+            [
+                'text'   => 'Reservas de Inventario',
+                'url'    => 'inventario/reservas',
+                'icon'   => 'bi bi-clipboard-check-fill',
+                'active' => ['inventario/reservas', 'inventario/reservas/*'],
+            ],
+            [
+                'text'   => 'Asignación a Evento',
+                'url'    => 'inventario/asignaciones',
+                'icon'   => 'bi bi-calendar2-check-fill',
+                'active' => ['inventario/asignaciones', 'inventario/asignaciones/*'],
+            ],
+        ],
+    ],
 ],
 
     /*

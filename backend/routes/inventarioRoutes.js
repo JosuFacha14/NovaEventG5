@@ -24,6 +24,9 @@ router.put('/item/:id/estado', ctrl.softDeleteItem);
 
 // rutas de categoria
 
+// obtener todas las categorias activas
+router.get('/categoria', ctrl.selCategorias);
+
 // obtener items de una categoria
 router.get('/categoria/:id/items', ctrl.selPorCategoria);
 
@@ -34,6 +37,9 @@ router.put('/categoria/:id', ctrl.updCategoria);
 router.put('/categoria/:id/estado', ctrl.softDeleteCategoria);
 
 // rutas de almacen
+
+// obtener todos los almacenes activos
+router.get('/almacen', ctrl.selAlmacenes);
 
 // obtener items de un almacen
 router.get('/almacen/:id/items', ctrl.selPorAlmacen);
@@ -46,10 +52,16 @@ router.put('/almacen/:id/estado', ctrl.softDeleteAlmacen);
 
 // rutas de reserva de inventario
 
+// obtener todas las reservas de inventario
+router.get('/reserva', ctrl.selReservas);
+
 // actualizar reserva (incluye cancelacion, que repone la cantidad disponible del item)
 router.put('/reserva/:id', ctrl.updReserva);
 
 // rutas de asignacion a evento
+
+// obtener todas las asignaciones
+router.get('/asignacion', ctrl.selAsignaciones);
 
 // obtener reservas y asignaciones de un evento
 router.get('/evento/:id', ctrl.selPorEvento);
