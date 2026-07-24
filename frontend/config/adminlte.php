@@ -377,6 +377,29 @@ return [
             ],
         ],
     ],
+    
+/* ── reporte ── */
+    [
+            'text'    => 'Reportes',
+            'icon'    => 'bi bi-file-earmark-bar-graph', // <--- Ícono principal de Reportes
+            'submenu' => [
+                [
+                    'text' => 'Costos Operativos',
+                    'url'  => 'mreportes/costos',
+                    'icon' => 'bi bi-cash-stack',
+                ],
+                [
+                    'text' => 'Ganancias',
+                    'url'  => 'mreportes/ganancias',
+                    'icon' => 'bi bi-graph-up-arrow',
+                ],
+                [
+                    'text' => 'Inventario',
+                    'url'  => 'mreportes/inventario',
+                    'icon' => 'bi bi-boxes',
+                ],
+            ],
+        ],
 ],
 
     /*
