@@ -117,8 +117,8 @@ return [
     |
     */
 
-    'footer_left' => 'Copyright &copy; 2014-'.date('Y').' <a href="https://adminlte.io" class="text-decoration-none">AdminLTE.io</a>. All rights reserved.',
-    'footer_right' => 'Anything you want',
+    'footer_left' => 'NovaEvent '.date('D-M-Y').'',
+    'footer_right' => 'Sistema integral para eventos',
     'preloader' => false,
     'control_sidebar' => false,
     'control_sidebar_theme' => 'dark',
@@ -126,12 +126,12 @@ return [
     // Documentation URL used by the navbar "Documentation" link and the sidebar
     // "View documentation" CTA (false to hide the CTA). Defaults to the in-app
     // docs viewer served at /docs (see the `docs` keys below).
-    'sidebar_docs_url' => '/docs',
+    'sidebar_docs_url' => false,
 
     // Bundled demo/showcase pages (Dashboard v2/v3, Widgets, UI, Forms, Tables,
     // Layout Options, Theme Generate, auth variants, error pages). Set false to
     // skip registering their routes in production.
-    'demo' => true,
+    'demo' => false,
     'demo_middleware' => ['web', 'auth'],
 
     // In-app documentation viewer: renders this package's docs/*.md files at
