@@ -29,6 +29,17 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     @endif
+    @if($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show">
+            <i class="bi bi-exclamation-triangle me-1"></i>
+            <ul class="mb-0">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
 
     <x-adminlte-card title="Listado de Empleados" icon="bi bi-briefcase-fill" theme="primary" collapsible>
         <div class="table-responsive">
@@ -55,7 +66,7 @@
                             <td><span class="badge bg-secondary">{{ $e['CARGO'] }}</span></td>
                             <td class="text-center">{{ $e['FEC_CONTRATACION'] ?? '—' }}</td>
                             <td class="text-end">
-                                ${{ number_format($e['SALARIO'] ?? 0, 2) }}
+                                L {{ number_format($e['SALARIO'] ?? 0, 2) }}
                             </td>
                             <td class="text-center" style="white-space:nowrap;">
                                 {{-- Editar --}}
@@ -119,8 +130,8 @@
                             <div class="col-md-12">
                                 <label class="form-label fw-semibold">Cargo <span class="text-danger">*</span></label>
                                 <input type="text" name="cargo" class="form-control" maxlength="100"
-                                       required placeholder="Ej. Gerente de Ventas">
-                                <div class="invalid-feedback">El cargo es obligatorio.</div>
+                                       required pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$" placeholder="Ej. Gerente de Ventas">
+                                <div class="invalid-feedback">el cargo solo pueden ser letras</div>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold">Fecha de Contratación <span class="text-danger">*</span></label>
@@ -130,7 +141,7 @@
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold">Salario <span class="text-danger">*</span></label>
                                 <div class="input-group">
-                                    <span class="input-group-text">$</span>
+                                    <span class="input-group-text">L </span>
                                     <input type="number" name="salario" class="form-control" min="0"
                                            step="0.01" required placeholder="0.00">
                                     <div class="invalid-feedback">Ingrese el salario.</div>
@@ -167,8 +178,8 @@
                             <div class="col-md-12">
                                 <label class="form-label fw-semibold">Cargo <span class="text-danger">*</span></label>
                                 <input type="text" id="editCargo" name="cargo" class="form-control"
-                                       maxlength="100" required>
-                                <div class="invalid-feedback">El cargo es obligatorio.</div>
+                                       maxlength="100" required pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$">
+                                <div class="invalid-feedback">el cargo solo pueden ser letras</div>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold">Fecha de Contratación <span class="text-danger">*</span></label>
@@ -179,7 +190,7 @@
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold">Salario <span class="text-danger">*</span></label>
                                 <div class="input-group">
-                                    <span class="input-group-text">$</span>
+                                    <span class="input-group-text">L </span>
                                     <input type="number" id="editSalario" name="salario" class="form-control"
                                            min="0" step="0.01" required>
                                     <div class="invalid-feedback">Ingrese el salario.</div>

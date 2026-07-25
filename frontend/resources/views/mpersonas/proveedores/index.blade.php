@@ -29,6 +29,17 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     @endif
+    @if($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show">
+            <i class="bi bi-exclamation-triangle me-1"></i>
+            <ul class="mb-0">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
 
     <x-adminlte-card title="Listado de Proveedores" icon="bi bi-truck" theme="primary" collapsible>
         <div class="table-responsive">
@@ -114,13 +125,14 @@
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold">Empresa <span class="text-danger">*</span></label>
                                 <input type="text" name="empresa" class="form-control" maxlength="150"
-                                       required placeholder="Nombre de la empresa proveedora">
-                                <div class="invalid-feedback">El nombre de la empresa es obligatorio.</div>
+                                       required pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$" placeholder="Nombre de la empresa proveedora">
+                                <div class="invalid-feedback">la empresa solo pueden ser letras</div>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold">Categoría de Servicio</label>
                                 <input type="text" name="categoria_servicio" class="form-control" maxlength="100"
-                                       placeholder="Ej. Catering, Audio y Video…">
+                                       pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$" placeholder="Ej. Catering, Audio y Video…">
+                                <div class="invalid-feedback">la categoria de servicio solo pueden ser letras</div>
                             </div>
                         </div>
                     </div>
@@ -153,13 +165,14 @@
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold">Empresa <span class="text-danger">*</span></label>
                                 <input type="text" id="editEmpresaProv" name="empresa" class="form-control"
-                                       maxlength="150" required>
-                                <div class="invalid-feedback">El nombre de la empresa es obligatorio.</div>
+                                       maxlength="150" required pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$">
+                                <div class="invalid-feedback">la empresa solo pueden ser letras</div>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold">Categoría de Servicio</label>
                                 <input type="text" id="editCategoriaProv" name="categoria_servicio"
-                                       class="form-control" maxlength="100">
+                                       class="form-control" maxlength="100" pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$">
+                                <div class="invalid-feedback">la categoria de servicio solo pueden ser letras</div>
                             </div>
                         </div>
                     </div>
