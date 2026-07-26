@@ -9,90 +9,95 @@ class ReportesController extends Controller
 {
     private $apiUrl = 'http://localhost:3000/api';
 
-    /**
-     * Dashboard Principal de Reportes
-     */
-    public function index()
+    // Helper: fetch a list from the API or return []
+    private function fetchList(string $endpoint, array $params = []): array
     {
         try {
-            $responseCostos = Http::get("{$this->apiUrl}/costos-operativos");
-            $costos = $responseCostos->successful() ? json_decode($responseCostos->body()) : [];
-            
-            $totalCostos = 0;
-            if (is_array($costos)) {
-                foreach ($costos as $c) {
-                    $totalCostos += $c->MON_REAL ?? $c->mon_real ?? 0;
-                }
-            }
-
-            $responseGanancias = Http::get("{$this->apiUrl}/ganancias");
-            $ganancias = $responseGanancias->successful() ? json_decode($responseGanancias->body()) : [];
-            
-            $totalGanancias = 0;
-            if (is_array($ganancias)) {
-                foreach ($ganancias as $g) {
-                    $totalGanancias += $g->MON_UTILIDAD ?? $g->mon_utilidad ?? 0;
-                }
-            }
-
+            $response = Http::get("{$this->apiUrl}{$endpoint}", $params);
+            $data = $response->successful() ? json_decode($response->body()) : [];
+            return is_array($data) ? $data : [];
         } catch (\Exception $e) {
-            $costos = [];
-            $ganancias = [];
-            $totalCostos = 0;
-            $totalGanancias = 0;
+            return [];
         }
+    }
 
-        $reportesLista = [];
-        if (is_array($costos) && count($costos) > 0) {
-            foreach ($costos as $key => $c) {
-                $reportesLista[] = [
-                    'id'       => $c->COD_COSTO ?? $c->cod_costo ?? ($key + 1),
-                    'concepto' => $c->NOM_COSTO ?? $c->nom_costo ?? 'Reporte de Costo ' . ($key + 1),
-                    'monto'    => $c->MON_REAL ?? $c->mon_real ?? 0,
-                    'estado'   => $c->IND_ESTADO ?? $c->ind_estado ?? 'Activo'
-                ];
-            }
-        } else {
-            $reportesLista = [
-                ['id' => 1, 'concepto' => 'Reporte Consolidado de Inventario', 'monto' => 12500.00, 'estado' => 'Activo'],
-                ['id' => 2, 'concepto' => 'Balance General de Costos Operativos', 'monto' => 6000.00, 'estado' => 'Activo']
-            ];
-        }
+    
+    // RP_TABLA_REPORTES
+    
+
+    public function index()
+    {
+        $reportes  = $this->fetchList('/reportes');
+        $ganancias = $this->fetchList('/ganancias');
+        $costos    = $this->fetchList('/costos-operativos');
+
+        $totalGanancias = array_sum(array_map(fn($g) => $g->MON_UTILIDAD ?? $g->mon_utilidad ?? 0, $ganancias));
+        $totalCostos    = array_sum(array_map(fn($c) => $c->MON_REAL ?? $c->mon_real ?? 0, $costos));
 
         $datos = [
-            'total_eventos'   => is_array($costos) ? count($costos) : 0,
+            'total_reportes'  => count($reportes),
             'total_ganancias' => $totalGanancias,
             'total_costos'    => $totalCostos,
-            'reportes_lista'  => $reportesLista,
+            'reportes_lista'  => $reportes,
         ];
 
         return view('mreportes.reportes.index', compact('datos'));
     }
 
-    // ==========================================
+    public function storeReporte(Request $request)
+    {
+        try {
+            $response = Http::post("{$this->apiUrl}/reportes", [
+                'pv_tip_reporte'       => $request->input('tip_reporte'),
+                'pd_fec_periodo_desde' => $request->input('fec_periodo_desde'),
+                'pd_fec_periodo_hasta' => $request->input('fec_periodo_hasta'),
+                'pv_obs_reporte'       => $request->input('obs_reporte'),
+                'pv_usr_registro'      => session('usuario', 'admin'),
+            ]);
+
+            if ($response->successful()) {
+                return response()->json(['success' => true, 'message' => 'Reporte registrado correctamente.']);
+            }
+            return response()->json(['success' => false, 'message' => $response->body()], 400);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Error de servidor: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function updateReporte(Request $request, $id)
+    {
+        try {
+            $response = Http::put("{$this->apiUrl}/reportes/{$id}", [
+                'pv_tip_reporte'       => $request->input('tip_reporte'),
+                'pd_fec_periodo_desde' => $request->input('fec_periodo_desde'),
+                'pd_fec_periodo_hasta' => $request->input('fec_periodo_hasta'),
+                'pv_obs_reporte'       => $request->input('obs_reporte'),
+            ]);
+
+            if ($response->successful()) {
+                return response()->json(['success' => true, 'message' => 'Reporte actualizado correctamente.']);
+            }
+            return response()->json(['success' => false, 'message' => $response->body()], 400);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Error de servidor: ' . $e->getMessage()], 500);
+        }
+    }
+
+    
     // COSTOS OPERATIVOS
-    // ==========================================
+    
 
     public function costosIndex()
     {
-        try {
-            $response = Http::get("{$this->apiUrl}/costos-operativos");
-            $costos = $response->successful() ? json_decode($response->body()) : [];
-        } catch (\Exception $e) {
-            $costos = [];
-        }
+        $costos      = $this->fetchList('/costos-operativos');
+        $eventos     = $this->fetchList('/eventos', ['accion' => 'SEL_EVENTO']);
+        $reportes    = $this->fetchList('/reportes');
+        $proveedores = $this->fetchList('/proveedores', ['accion' => 'SEL_PA_PROVEEDORES']);
 
-        $totalPresupuestado = 0;
-        $totalReal = 0;
+        $totalPresupuestado = array_sum(array_map(fn($c) => $c->MON_PRESUPUESTADO ?? $c->mon_presupuestado ?? 0, $costos));
+        $totalReal          = array_sum(array_map(fn($c) => $c->MON_REAL ?? $c->mon_real ?? 0, $costos));
 
-        if (is_array($costos)) {
-            foreach ($costos as $c) {
-                $totalPresupuestado += $c->MON_PRESUPUESTADO ?? $c->mon_presupuestado ?? 0;
-                $totalReal          += $c->MON_REAL ?? $c->mon_real ?? 0;
-            }
-        }
-
-        return view('mreportes.costos.index', compact('costos', 'totalPresupuestado', 'totalReal'));
+        return view('mreportes.costos.index', compact('costos', 'totalPresupuestado', 'totalReal', 'eventos', 'reportes', 'proveedores'));
     }
 
     public function storeCosto(Request $request)
@@ -100,15 +105,19 @@ class ReportesController extends Controller
         try {
             $response = Http::post("{$this->apiUrl}/costos-operativos", [
                 'cod_evento'        => $request->input('cod_evento'),
+                'cod_reporte'       => $request->input('cod_reporte'),
+                'cod_proveedor'     => $request->input('cod_proveedor'),
+                'ind_categoria'     => $request->input('ind_categoria'),
+                'des_costo'         => $request->input('des_costo'),
                 'mon_presupuestado' => $request->input('mon_presupuestado'),
                 'mon_real'          => $request->input('mon_real'),
-                'ind_categoria'     => $request->input('ind_categoria', 'OPERATIVO'),
+                'obs_costo'         => $request->input('obs_costo'),
+                'usr_registro'      => session('usuario', 'admin'),
             ]);
 
             if ($response->successful()) {
                 return response()->json(['success' => true, 'message' => 'Costo registrado correctamente.']);
             }
-
             return response()->json(['success' => false, 'message' => $response->body()], 400);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => 'Error de servidor: ' . $e->getMessage()], 500);
@@ -120,65 +129,38 @@ class ReportesController extends Controller
         try {
             $response = Http::put("{$this->apiUrl}/costos-operativos/{$id}", [
                 'cod_evento'        => $request->input('cod_evento'),
+                'cod_reporte'       => $request->input('cod_reporte'),
+                'cod_proveedor'     => $request->input('cod_proveedor'),
+                'ind_categoria'     => $request->input('ind_categoria'),
+                'des_costo'         => $request->input('des_costo'),
                 'mon_presupuestado' => $request->input('mon_presupuestado'),
                 'mon_real'          => $request->input('mon_real'),
-                'ind_categoria'     => $request->input('ind_categoria', 'OPERATIVO'),
-                'ind_estado'        => $request->input('ind_estado', 'ACTIVO'),
+                'obs_costo'         => $request->input('obs_costo'),
             ]);
 
             if ($response->successful()) {
                 return response()->json(['success' => true, 'message' => 'Costo actualizado correctamente.']);
             }
-
             return response()->json(['success' => false, 'message' => $response->body()], 400);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => 'Error de servidor: ' . $e->getMessage()], 500);
         }
     }
 
-    public function darDeBajaCosto($id)
-    {
-        try {
-            $response = Http::put("{$this->apiUrl}/costos-operativos/{$id}", [
-                'ind_estado' => 'INACTIVO'
-            ]);
-
-            if ($response->successful()) {
-                return response()->json(['success' => true, 'message' => 'Registro dado de baja correctamente.']);
-            }
-
-            return response()->json(['success' => false, 'message' => $response->body()], 400);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => 'Error de servidor: ' . $e->getMessage()], 500);
-        }
-    }
-
-    // ==========================================
+    
     // GANANCIAS Y UTILIDADES
-    // ==========================================
+    
 
     public function gananciasIndex()
     {
-        try {
-            $response = Http::get("{$this->apiUrl}/ganancias");
-            $ganancias = $response->successful() ? json_decode($response->body()) : [];
-        } catch (\Exception $e) {
-            $ganancias = [];
-        }
+        $ganancias = $this->fetchList('/ganancias');
+        $eventos   = $this->fetchList('/eventos', ['accion' => 'SEL_EVENTO']);
 
-        $totalIngresos = 0;
-        $totalCostos   = 0;
-        $totalUtilidad = 0;
+        $totalIngresos = array_sum(array_map(fn($g) => $g->MON_INGRESOS ?? $g->mon_ingresos ?? 0, $ganancias));
+        $totalCostos   = array_sum(array_map(fn($g) => $g->MON_COSTOS ?? $g->mon_costos ?? 0, $ganancias));
+        $totalUtilidad = array_sum(array_map(fn($g) => $g->MON_UTILIDAD ?? $g->mon_utilidad ?? 0, $ganancias));
 
-        if (is_array($ganancias)) {
-            foreach ($ganancias as $g) {
-                $totalIngresos += $g->MON_INGRESOS ?? $g->mon_ingresos ?? 0;
-                $totalCostos   += $g->MON_COSTOS ?? $g->mon_costos ?? 0;
-                $totalUtilidad += $g->MON_UTILIDAD ?? $g->mon_utilidad ?? 0;
-            }
-        }
-
-        return view('mreportes.ganancias.index', compact('ganancias', 'totalIngresos', 'totalCostos', 'totalUtilidad'));
+        return view('mreportes.ganancias.index', compact('ganancias', 'totalIngresos', 'totalCostos', 'totalUtilidad', 'eventos'));
     }
 
     public function storeGanancia(Request $request)
@@ -188,12 +170,14 @@ class ReportesController extends Controller
                 'cod_evento'   => $request->input('cod_evento'),
                 'mon_ingresos' => $request->input('mon_ingresos'),
                 'mon_costos'   => $request->input('mon_costos'),
+                'mon_utilidad' => $request->input('mon_utilidad'),
+                'fec_cierre'   => $request->input('fec_cierre'),
+                'usr_registro' => session('usuario', 'admin'),
             ]);
 
             if ($response->successful()) {
                 return response()->json(['success' => true, 'message' => 'Ganancia registrada correctamente.']);
             }
-
             return response()->json(['success' => false, 'message' => $response->body()], 400);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => 'Error de servidor: ' . $e->getMessage()], 500);
@@ -207,65 +191,47 @@ class ReportesController extends Controller
                 'cod_evento'   => $request->input('cod_evento'),
                 'mon_ingresos' => $request->input('mon_ingresos'),
                 'mon_costos'   => $request->input('mon_costos'),
+                'mon_utilidad' => $request->input('mon_utilidad'),
+                'fec_cierre'   => $request->input('fec_cierre'),
             ]);
 
             if ($response->successful()) {
                 return response()->json(['success' => true, 'message' => 'Ganancia actualizada correctamente.']);
             }
-
             return response()->json(['success' => false, 'message' => $response->body()], 400);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => 'Error de servidor: ' . $e->getMessage()], 500);
         }
     }
 
-    public function darDeBajaGanancia($id)
-    {
-        try {
-            $response = Http::put("{$this->apiUrl}/ganancias/{$id}", [
-                'ind_estado' => 'INACTIVO'
-            ]);
-
-            if ($response->successful()) {
-                return response()->json(['success' => true, 'message' => 'Ganancia dada de baja.']);
-            }
-
-            return response()->json(['success' => false, 'message' => $response->body()], 400);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => 'Error de servidor: ' . $e->getMessage()], 500);
-        }
-    }
-
-    // ==========================================
+    
     // REPORTE DE INVENTARIO
-    // ==========================================
+    
 
     public function inventarioIndex()
     {
-        try {
-            $response = Http::get("{$this->apiUrl}/reportes-inventario");
-            $inventario = $response->successful() ? json_decode($response->body()) : [];
-        } catch (\Exception $e) {
-            $inventario = [];
-        }
+        $inventario = $this->fetchList('/reportes-inventario');
+        $items      = $this->fetchList('/in/item');
+        $eventos    = $this->fetchList('/eventos', ['accion' => 'SEL_EVENTO']);
 
-        return view('mreportes.inventario.index', compact('inventario'));
+        return view('mreportes.inventario.index', compact('inventario', 'items', 'eventos'));
     }
 
     public function storeInventario(Request $request)
     {
         try {
             $response = Http::post("{$this->apiUrl}/reportes-inventario", [
-                'cod_item'          => $request->input('cod_item'),
-                'cod_evento'        => $request->input('cod_evento'),
-                'can_utilizada'     => $request->input('can_utilizada'),
-                'des_observaciones' => $request->input('des_observaciones'),
+                'cod_item'         => $request->input('cod_item'),
+                'cod_evento'       => $request->input('cod_evento'),
+                'can_utilizada'    => $request->input('can_utilizada'),
+                'des_estado_final' => $request->input('des_estado_final'),
+                'obs_notas'        => $request->input('obs_notas'),
+                'usr_registro'     => session('usuario', 'admin'),
             ]);
 
             if ($response->successful()) {
                 return response()->json(['success' => true, 'message' => 'Registro de inventario guardado.']);
             }
-
             return response()->json(['success' => false, 'message' => $response->body()], 400);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => 'Error de servidor: ' . $e->getMessage()], 500);
@@ -276,33 +242,16 @@ class ReportesController extends Controller
     {
         try {
             $response = Http::put("{$this->apiUrl}/reportes-inventario/{$id}", [
-                'cod_item'          => $request->input('cod_item'),
-                'cod_evento'        => $request->input('cod_evento'),
-                'can_utilizada'     => $request->input('can_utilizada'),
-                'des_observaciones' => $request->input('des_observaciones'),
+                'cod_item'         => $request->input('cod_item'),
+                'cod_evento'       => $request->input('cod_evento'),
+                'can_utilizada'    => $request->input('can_utilizada'),
+                'des_estado_final' => $request->input('des_estado_final'),
+                'obs_notas'        => $request->input('obs_notas'),
             ]);
 
             if ($response->successful()) {
                 return response()->json(['success' => true, 'message' => 'Registro de inventario actualizado.']);
             }
-
-            return response()->json(['success' => false, 'message' => $response->body()], 400);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => 'Error de servidor: ' . $e->getMessage()], 500);
-        }
-    }
-
-    public function darDeBajaInventario($id)
-    {
-        try {
-            $response = Http::put("{$this->apiUrl}/reportes-inventario/{$id}", [
-                'ind_estado' => 'INACTIVO'
-            ]);
-
-            if ($response->successful()) {
-                return response()->json(['success' => true, 'message' => 'Registro de inventario dado de baja.']);
-            }
-
             return response()->json(['success' => false, 'message' => $response->body()], 400);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => 'Error de servidor: ' . $e->getMessage()], 500);
