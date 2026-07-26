@@ -84,7 +84,7 @@
                                 $utilidad    = $g->MON_UTILIDAD ?? $g->mon_utilidad ?? 0;
                                 $codGanancia = $g->COD_GANANCIA ?? $g->cod_ganancia;
                                 $codEvento   = $g->COD_EVENTO ?? $g->cod_evento;
-                                $fecCierre   = $g->FEC_CIERRE ?? $g->fec_cierre;
+                                $fecCierre   = $g->FEC_CIERRE ?? $g->fec_cierre ?? null;
                             @endphp
                             <tr>
                                 <td>{{ $codGanancia }}</td>
