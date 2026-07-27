@@ -29,6 +29,17 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     @endif
+    @if($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show">
+            <i class="bi bi-exclamation-triangle me-1"></i>
+            <ul class="mb-0">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
 
     <x-adminlte-card title="Tipos de Usuario" icon="bi bi-shield-lock" theme="primary" collapsible>
         <div class="table-responsive">
@@ -71,8 +82,9 @@
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Nombre <span class="text-danger">*</span></label>
                             <input type="text" name="nom_tipo" class="form-control" maxlength="255" required
+                                   pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$"
                                    placeholder="Ej. ADMINISTRADOR">
-                            <div class="invalid-feedback">El nombre es obligatorio.</div>
+                            <div class="invalid-feedback">el nombre solo pueden ser letras</div>
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Descripción <span class="text-danger">*</span></label>

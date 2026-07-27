@@ -62,7 +62,7 @@
                                     <span class="badge bg-danger">Inactivo</span>
                                 @endif
                             </td>
-                            <td class="text-end">${{ number_format($e['MON_PRECIO_HORA'], 2) }}</td>
+                            <td class="text-end">L {{ number_format($e['MON_PRECIO_HORA'], 2) }}</td>
                             <td class="text-center text-nowrap">
                                 <button class="btn btn-warning btn-xs"
                                     title="Editar"

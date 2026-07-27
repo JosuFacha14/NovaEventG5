@@ -144,7 +144,7 @@
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold">Nombre de Usuario <span class="text-danger">*</span></label>
                                 <input type="text" name="nombre" class="form-control" maxlength="255" required
-                                       placeholder="Ej. jdoe">
+                                       placeholder="Ej. Cirst12">
                                 <div class="invalid-feedback">El nombre de usuario es obligatorio.</div>
                             </div>
                             <div class="col-md-6">
@@ -156,7 +156,7 @@
                             <div class="col-md-4">
                                 <label class="form-label fw-semibold">Token (6 dígitos) <span class="text-danger">*</span></label>
                                 <input type="text" name="token" class="form-control" minlength="6" maxlength="6"
-                                       required placeholder="Ej. 123456" pattern="[A-Za-z0-9]{6}">
+                                       required placeholder="Ej. 1D2F34" pattern="[A-Za-z0-9]{6}">
                                 <div class="invalid-feedback">El token debe tener exactamente 6 caracteres.</div>
                             </div>
                             <div class="col-md-4">

@@ -189,8 +189,10 @@ class PersonasController extends Controller
     public function tiposUsuarioStore(Request $request)
     {
         $request->validate([
-            'nom_tipo' => 'required|string|max:255',
+            'nom_tipo' => ['required', 'string', 'max:255', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/'],
             'des_tipo' => 'required|string|max:2000',
+        ], [
+            'nom_tipo.regex' => 'el nombre solo pueden ser letras',
         ]);
 
         try {
@@ -206,8 +208,10 @@ class PersonasController extends Controller
     public function tiposUsuarioUpdate(Request $request, int $id)
     {
         $request->validate([
-            'nom_tipo' => 'required|string|max:255',
+            'nom_tipo' => ['required', 'string', 'max:255', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/'],
             'des_tipo' => 'required|string|max:2000',
+        ], [
+            'nom_tipo.regex' => 'el nombre solo pueden ser letras',
         ]);
 
         try {
@@ -237,9 +241,11 @@ class PersonasController extends Controller
     public function tiposClienteStore(Request $request)
     {
         $request->validate([
-            'nom_tipo_cli' => 'required|string|max:255',
+            'nom_tipo_cli' => ['required', 'string', 'max:255', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/'],
             'des_tipo_cli' => 'required|string|max:255',
             'ind_tipo_cli' => 'required|in:1,0',
+        ], [
+            'nom_tipo_cli.regex' => 'el nombre solo pueden ser letras',
         ]);
 
         try {
@@ -268,9 +274,11 @@ class PersonasController extends Controller
         }
 
         $request->validate([
-            'nom_tipo_cli' => 'required|string|max:255',
+            'nom_tipo_cli' => ['required', 'string', 'max:255', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/'],
             'des_tipo_cli' => 'required|string|max:255',
             'ind_tipo_cli' => 'required|in:1,0',
+        ], [
+            'nom_tipo_cli.regex' => 'el nombre solo pueden ser letras',
         ]);
 
         try {
@@ -461,9 +469,11 @@ class PersonasController extends Controller
     {
         $request->validate([
             'cod_persona'     => 'required|integer|min:1',
-            'cargo'           => 'required|string|max:100',
+            'cargo'           => ['required', 'string', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/'],
             'fec_contratacion'=> 'required|date',
             'salario'         => 'required|numeric|min:0',
+        ], [
+            'cargo.regex' => 'el cargo solo pueden ser letras',
         ]);
 
         try {
@@ -492,9 +502,11 @@ class PersonasController extends Controller
         }
 
         $request->validate([
-            'cargo'           => 'required|string|max:100',
+            'cargo'           => ['required', 'string', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/'],
             'fec_contratacion'=> 'required|date',
             'salario'         => 'required|numeric|min:0',
+        ], [
+            'cargo.regex' => 'el cargo solo pueden ser letras',
         ]);
 
         try {
@@ -529,8 +541,11 @@ class PersonasController extends Controller
     {
         $request->validate([
             'cod_persona'       => 'required|integer|min:1',
-            'empresa'           => 'required|string|max:150',
-            'categoria_servicio'=> 'nullable|string|max:100',
+            'empresa'           => ['required', 'string', 'max:150', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/'],
+            'categoria_servicio'=> ['nullable', 'string', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/'],
+        ], [
+            'empresa.regex' => 'la empresa solo pueden ser letras',
+            'categoria_servicio.regex' => 'la categoria de servicio solo pueden ser letras',
         ]);
 
         try {
@@ -565,8 +580,11 @@ class PersonasController extends Controller
         }
 
         $request->validate([
-            'empresa'           => 'required|string|max:150',
-            'categoria_servicio'=> 'nullable|string|max:100',
+            'empresa'           => ['required', 'string', 'max:150', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/'],
+            'categoria_servicio'=> ['nullable', 'string', 'max:100', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/'],
+        ], [
+            'empresa.regex' => 'la empresa solo pueden ser letras',
+            'categoria_servicio.regex' => 'la categoria de servicio solo pueden ser letras',
         ]);
 
         try {
