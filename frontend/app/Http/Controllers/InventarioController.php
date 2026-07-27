@@ -34,7 +34,7 @@ class InventarioController extends Controller
     public function categoriasStore(Request $request)
     {
         $request->validate([
-            'nom_categoria' => 'required|string|max:100',
+            'nom_categoria' => 'required|string|max:100|regex:/^[A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+$/',
             'des_categoria' => 'nullable|string',
             'des_icono'     => 'nullable|string|max:50',
         ]);
@@ -55,7 +55,7 @@ class InventarioController extends Controller
     public function categoriasUpdate(Request $request, int $id)
     {
         $request->validate([
-            'nom_categoria' => 'required|string|max:100',
+            'nom_categoria' => 'required|string|max:100|regex:/^[A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+$/',
             'des_categoria' => 'nullable|string',
             'des_icono'     => 'nullable|string|max:50',
         ]);
@@ -104,7 +104,7 @@ class InventarioController extends Controller
     public function almacenesStore(Request $request)
     {
         $request->validate([
-            'nom_almacen'   => 'required|string|max:100',
+            'nom_almacen'   => 'required|string|max:100|regex:/^[A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+$/',
             'dir_ubicacion' => 'nullable|string|max:200',
             'can_capacidad' => 'nullable|integer|min:0',
         ]);
@@ -125,7 +125,7 @@ class InventarioController extends Controller
     public function almacenesUpdate(Request $request, int $id)
     {
         $request->validate([
-            'nom_almacen'   => 'required|string|max:100',
+            'nom_almacen'   => 'required|string|max:100|regex:/^[A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+$/',
             'dir_ubicacion' => 'nullable|string|max:200',
             'can_capacidad' => 'nullable|integer|min:0',
         ]);
@@ -174,7 +174,7 @@ class InventarioController extends Controller
     public function itemsStore(Request $request)
     {
         $request->validate([
-            'nom_item'      => 'required|string|max:150',
+            'nom_item'      => 'required|string|max:150|regex:/^[A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+$/',
             'des_item'      => 'nullable|string',
             'can_total'     => 'required|integer|min:0',
             'can_disponible'=> 'required|integer|min:0',
@@ -188,7 +188,7 @@ class InventarioController extends Controller
                 $request->only([
                     'nom_item', 'des_item', 'can_total', 'can_disponible',
                     'cod_categoria', 'cod_almacen', 'cod_item_unico',
-                    'img_foto_url', 'fec_adquisicion', 'mon_costo',
+                    'fec_adquisicion', 'mon_costo',
                 ]),
                 ['usr_registro' => session('usuario', 'admin')]
             ));
@@ -203,7 +203,7 @@ class InventarioController extends Controller
     public function itemsUpdate(Request $request, int $id)
     {
         $request->validate([
-            'nom_item'      => 'required|string|max:150',
+            'nom_item'      => 'required|string|max:150|regex:/^[A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+$/',
             'can_total'     => 'required|integer|min:0',
             'can_disponible'=> 'required|integer|min:0',
         ]);
@@ -212,7 +212,7 @@ class InventarioController extends Controller
             $this->svc->actualizarItem($id, array_merge(
                 $request->only([
                     'nom_item', 'des_item', 'can_total', 'can_disponible',
-                    'cod_item_unico', 'img_foto_url', 'fec_adquisicion', 'mon_costo',
+                    'cod_item_unico', 'fec_adquisicion', 'mon_costo',
                 ]),
                 ['usr_registro' => session('usuario', 'admin')]
             ));
@@ -294,7 +294,7 @@ class InventarioController extends Controller
             'fec_inicio_res'   => 'required|date',
             'fec_fin_res'      => 'required|date|after_or_equal:fec_inicio_res',
             'ind_estado_res'   => 'required|in:ACTIVA,CANCELADA,COMPLETADA',
-            'nom_solicitante'  => 'nullable|string|max:100',
+            'nom_solicitante'  => 'nullable|string|max:100|regex:/^[A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+$/',
             'des_notas_res'    => 'nullable|string',
         ]);
 
@@ -337,7 +337,7 @@ class InventarioController extends Controller
             'cod_item'      => 'required|integer',
             'can_asignada'  => 'required|integer|min:1',
             'fec_salida'    => 'required|date',
-            'nom_resp_asig' => 'nullable|string|max:100',
+            'nom_resp_asig' => 'nullable|string|max:100|regex:/^[A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+$/',
         ]);
 
         try {
@@ -364,7 +364,7 @@ class InventarioController extends Controller
             'can_asignada'    => 'required|integer|min:1',
             'ind_estado_asig' => 'required|in:PENDIENTE,ENTREGADO,RETORNADO,PERDIDO',
             'ind_condicion'   => 'nullable|in:BUENO,DANIADO,PERDIDO',
-            'nom_resp_asig'   => 'nullable|string|max:100',
+            'nom_resp_asig'   => 'nullable|string|max:100|regex:/^[A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+$/',
             'des_observaciones' => 'nullable|string',
         ]);
 

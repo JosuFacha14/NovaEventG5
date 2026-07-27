@@ -40,7 +40,6 @@
                         <th>#</th>
                         <th>Nombre</th>
                         <th>Descripción</th>
-                        <th>Ícono</th>
                         <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
@@ -51,13 +50,6 @@
                             <td class="text-center">{{ $cat['COD_CATEGORIA'] }}</td>
                             <td>{{ $cat['NOM_CATEGORIA'] ?? '—' }}</td>
                             <td>{{ $cat['DES_CATEGORIA'] ?? '—' }}</td>
-                            <td class="text-center">
-                                @if(!empty($cat['DES_ICONO']))
-                                    <i class="{{ $cat['DES_ICONO'] }}"></i>
-                                @else
-                                    <span class="text-muted">—</span>
-                                @endif
-                            </td>
                             <td class="text-center">
                                 @if(($cat['IND_ACTIVA'] ?? 1))
                                     <span class="badge bg-success">Activa</span>
@@ -76,16 +68,13 @@
 
                                 {{-- Botón dar de baja --}}
                                 @if($cat['IND_ACTIVA'] ?? 1)
-                                    <form method="POST"
-                                          action="{{ route('inventario.categorias.baja', $cat['COD_CATEGORIA']) }}"
-                                          class="d-inline"
-                                          onsubmit="return confirm('¿Desactivar esta categoría?')">
-                                        @csrf
-                                        @method('PUT')
-                                        <button type="submit" class="btn btn-danger btn-sm" title="Dar de baja">
-                                            <i class="bi bi-x-circle-fill"></i>
-                                        </button>
-                                    </form>
+                                    <button type="button" class="btn btn-danger btn-sm" title="Dar de baja"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modalConfirmarBaja"
+                                            data-action="{{ route('inventario.categorias.baja', $cat['COD_CATEGORIA']) }}"
+                                            data-nombre="{{ $cat['NOM_CATEGORIA'] ?? '' }}">
+                                        <i class="bi bi-x-circle-fill"></i>
+                                    </button>
                                 @endif
                             </td>
                         </tr>
@@ -106,18 +95,14 @@
                                             <div class="mb-3">
                                                 <label class="form-label">Nombre <span class="text-danger">*</span></label>
                                                 <input type="text" name="nom_categoria" class="form-control"
-                                                       value="{{ $cat['NOM_CATEGORIA'] ?? '' }}" required maxlength="100">
+                                                       value="{{ $cat['NOM_CATEGORIA'] ?? '' }}" required maxlength="100"
+                                                       pattern="[A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+" title="Solo se permiten letras y espacios">
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Descripción</label>
                                                 <textarea name="des_categoria" class="form-control" rows="3">{{ $cat['DES_CATEGORIA'] ?? '' }}</textarea>
                                             </div>
-                                            <div class="mb-3">
-                                                <label class="form-label">Clase de ícono (Bootstrap Icons)</label>
-                                                <input type="text" name="des_icono" class="form-control"
-                                                       value="{{ $cat['DES_ICONO'] ?? '' }}" maxlength="50"
-                                                       placeholder="bi bi-tag-fill">
-                                            </div>
+
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -131,7 +116,7 @@
                         </div>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center text-muted py-4">
+                            <td colspan="5" class="text-center text-muted py-4">
                                 <i class="bi bi-inbox fs-4 d-block mb-1"></i>
                                 No hay categorías registradas.
                             </td>
@@ -156,18 +141,15 @@
                         <div class="mb-3">
                             <label class="form-label">Nombre <span class="text-danger">*</span></label>
                             <input type="text" name="nom_categoria" class="form-control" required maxlength="100"
-                                   placeholder="Ej: Mobiliario">
+                                   placeholder="Ej: Mobiliario"
+                                   pattern="[A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+" title="Solo se permiten letras y espacios">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Descripción</label>
                             <textarea name="des_categoria" class="form-control" rows="3"
                                       placeholder="Descripción de la categoría..."></textarea>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label">Clase de ícono (Bootstrap Icons)</label>
-                            <input type="text" name="des_icono" class="form-control" maxlength="50"
-                                   placeholder="Ej: bi bi-tag-fill">
-                        </div>
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -180,14 +162,52 @@
         </div>
     </div>
 
+    {{-- Modal confirmar baja --}}
+    <div class="modal fade" id="modalConfirmarBaja" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title"><i class="bi bi-exclamation-triangle-fill me-1"></i> Confirmar baja</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Está seguro de que desea dar de baja la categoría <strong id="nombreCategoriaBaja"></strong>?</p>
+                    <p class="text-muted mb-0"><small>Esta acción desactivará la categoría. No se eliminarán los datos.</small></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <form id="formBajaCategoria" method="POST" action="">
+                        @csrf
+                        @method('PUT')
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-person-dash-fill me-1"></i> Dar de baja
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @stop
 
 
 @section('js')
 <script>
-    // Inicializar DataTable para búsqueda y paginación
+    // Modal de confirmación de baja
     document.addEventListener('DOMContentLoaded', function () {
-        if (typeof $.fn.DataTable !== 'undefined') {
+        var modalBaja = document.getElementById('modalConfirmarBaja');
+        if (modalBaja) {
+            modalBaja.addEventListener('show.bs.modal', function (event) {
+                var button = event.relatedTarget;
+                var actionUrl = button.getAttribute('data-action');
+                var nombre = button.getAttribute('data-nombre');
+                document.getElementById('nombreCategoriaBaja').textContent = nombre;
+                document.getElementById('formBajaCategoria').action = actionUrl;
+            });
+        }
+
+        // Inicializar DataTable
+        if (typeof $.fn !== 'undefined' && typeof $.fn.DataTable !== 'undefined') {
             $('#tblCategorias').DataTable({
                 language: { url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json' },
                 pageLength: 10,
@@ -197,3 +217,5 @@
     });
 </script>
 @stop
+
+
