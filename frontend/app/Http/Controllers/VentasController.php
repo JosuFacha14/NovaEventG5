@@ -367,11 +367,8 @@ class VentasController extends Controller
 
             // Obtener reservaciones
             $responseReservaciones = Http::get(
-                $this->api . '/reservaciones',
-                [
-                    'accion' => 'SEL_RESERVACION'
-                ]
-            );
+              $this->api . '/re/reservacion'
+           );
 
             $eventos = $responseEventos->successful()
                 ? $responseEventos->json()

@@ -110,7 +110,7 @@
         class="form-control"
         required>
 
-    <option value="">
+    <option value="" selected disabled>
         Seleccione una reservación
     </option>
 

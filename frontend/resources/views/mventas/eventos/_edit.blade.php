@@ -116,7 +116,7 @@
         name="cod_reservacion"
         class="form-control">
 
-    <option value="">
+    <option value="" selected disabled>
         Seleccione una reservación
     </option>
 
