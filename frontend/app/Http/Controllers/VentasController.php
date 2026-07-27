@@ -365,6 +365,13 @@ class VentasController extends Controller
                 ]
             );
 
+            // Obtener reservaciones
+            $responseReservaciones = Http::get(
+                $this->api . '/reservaciones',
+                [
+                    'accion' => 'SEL_RESERVACION'
+                ]
+            );
 
             $eventos = $responseEventos->successful()
                 ? $responseEventos->json()
@@ -378,12 +385,17 @@ class VentasController extends Controller
                 ? $responseCiclos->json()
                 : [];
 
+            $reservaciones = $responseReservaciones->successful()
+                ? $responseReservaciones->json()
+                : [];
+
 
         } catch (\Exception $e) {
 
             $eventos = [];
             $categorias = [];
             $ciclos = [];
+            $reservaciones = [];
 
             return back()->with(
                 'error',
@@ -394,11 +406,12 @@ class VentasController extends Controller
 
         return view(
             'mventas.eventos.index',
-            compact(
-                'eventos',
-                'categorias',
-                'ciclos'
-            )
+           compact(
+               'eventos',
+               'categorias',
+               'ciclos',
+               'reservaciones'
+             )
         );
     }
 

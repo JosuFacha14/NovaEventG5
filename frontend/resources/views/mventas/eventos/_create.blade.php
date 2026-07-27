@@ -106,12 +106,23 @@
                                 Código de Reservación
                             </label>
 
-                            <input type="number"
-                                   name="cod_reservacion"
-                                   class="form-control"
-                                   min="1"
-                                   placeholder="Ingrese el código de reservación"
-                                   required>
+                            <select name="cod_reservacion"
+        class="form-control"
+        required>
+
+    <option value="">
+        Seleccione una reservación
+    </option>
+
+    @foreach($reservaciones as $reservacion)
+
+        <option value="{{ $reservacion['COD_RESERVACION'] }}">
+            {{ $reservacion['COD_RESERVACION'] }}
+        </option>
+
+    @endforeach
+
+</select>
 
                         </div>
 
@@ -124,11 +135,13 @@
                             </label>
 
                             <input type="text"
-                                   name="nom_evento"
-                                   class="form-control"
-                                   maxlength="150"
-                                   placeholder="Ingrese el nombre del evento"
-                                   required>
+                                 name="nom_evento"
+                                 class="form-control"
+                                 maxlength="150"
+                                 pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+"
+                                 oninput="this.value=this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ ]/g,'')"
+                                 placeholder="Ingrese el nombre del evento"
+                                required>
 
                         </div>
 

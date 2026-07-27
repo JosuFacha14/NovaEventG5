@@ -3,7 +3,27 @@
 @section('title', 'Gestión de Eventos')
 
 @section('content_header')
-    <h1>Gestión de Eventos</h1>
+<div class="row align-items-center">
+
+    <div class="col-sm-6">
+        <h3 class="mb-0">Gestión de Eventos</h3>
+    </div>
+
+    <div class="col-sm-6 text-end">
+
+        <button
+            class="btn btn-primary btn-sm"
+            data-bs-toggle="modal"
+            data-bs-target="#modalCrear">
+
+            <i class="bi bi-plus-lg me-1"></i>
+            Nuevo Evento
+
+        </button>
+
+    </div>
+
+</div>
 @stop
 
 @section('content')
@@ -35,25 +55,12 @@
 
     <div class="card-header">
 
-        <h3 class="card-title">
-            Eventos Registrados
-        </h3>
+    <h3 class="card-title">
+    <i class="bi bi-calendar-event-fill me-2"></i>
+    Eventos Registrados
+</h3>
 
-        <div class="card-tools">
-
-            <button type="button"
-                    class="btn btn-success btn-sm"
-                    data-bs-toggle="modal"
-                    data-bs-target="#modalCrear">
-
-                <i class="bi bi-plus-lg"></i>
-                Nuevo Evento
-
-            </button>
-
-        </div>
-
-    </div>
+</div>
 
     <div class="card-body">
 
@@ -148,7 +155,8 @@
                                     data-fecha="{{ $evento['FEC_EVENTO'] ?? '' }}"
                                     data-hora="{{ $evento['HOR_EVENTO'] ?? '' }}"
                                     data-lugar="{{ $evento['DES_LUGAR'] ?? '' }}"
-                                    data-estado="{{ $evento['IND_ESTADO'] ?? '' }}">
+                                    data-estado="{{ $evento['IND_ESTADO'] ?? '' }}"
+                                    data-reservacion="{{ $evento['COD_RESERVACION'] ?? '' }}">
 
                                 <i class="bi bi-eye"></i>
 
@@ -561,7 +569,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 '';
 
             document.getElementById('edit_cod_reservacion').value =
-                '';
+    this.getAttribute('data-reservacion');
 
             document.getElementById('edit_des_evento').value =
                 '';

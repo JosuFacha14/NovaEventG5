@@ -3,7 +3,23 @@
 @section('title', 'Categorías de Evento')
 
 @section('content_header')
-    <h1>Catálogo de Categorías de Evento</h1>
+<div class="row align-items-center">
+    <div class="col-sm-6">
+        <h3 class="mb-0">Catálogo de Categorías de Evento</h3>
+    </div>
+
+    <div class="col-sm-6 text-end">
+        <button
+            class="btn btn-primary btn-sm"
+            data-bs-toggle="modal"
+            data-bs-target="#modalCrear">
+
+            <i class="bi bi-plus-lg me-1"></i>
+            Nueva Categoría
+
+        </button>
+    </div>
+</div>
 @stop
 
 @section('content')
@@ -23,18 +39,12 @@
 <div class="card card-primary">
 
     <div class="card-header">
-        <h3 class="card-title">Categorías Registradas</h3>
+    <h3 class="card-title">
+    <i class="bi bi-tag-fill me-2"></i>
+    Categorías Registradas
+</h3>
 
-        <div class="card-tools">
-            <button type="button"
-                    class="btn btn-success btn-sm"
-                    data-bs-toggle="modal"
-                    data-bs-target="#modalCrear">
-                <i class="bi bi-plus-lg"></i>
-                Nueva Categoría
-            </button>
-        </div>
-    </div>
+</div>
 
     <div class="card-body">
 
@@ -352,8 +362,6 @@ document.addEventListener('DOMContentLoaded', function () {
         boton.addEventListener('click', function () {
 
             const id = this.getAttribute('data-id');
-
-            document.getElementById('edit_id').value = id;
 
             document.getElementById('edit_nom_categoria').value =
                 this.getAttribute('data-nombre');

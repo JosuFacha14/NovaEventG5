@@ -25,26 +25,19 @@
 
                     <div class="mb-3">
 
-                        <label class="form-label">Código</label>
-
-                        <input type="text"
-                               id="edit_id"
-                               class="form-control"
-                               readonly>
-
-                    </div>
-
-                    <div class="mb-3">
-
                         <label class="form-label">
                             Nombre de la categoría
                         </label>
 
-                        <input type="text"
-                               name="nom_categoria"
-                               id="edit_nom_categoria"
-                               class="form-control"
-                               required>
+                        <input
+                            type="text"
+                            name="nom_categoria"
+                            id="edit_nom_categoria"
+                            class="form-control"
+                            pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+"
+                            title="Solo se permiten letras y espacios."
+                            oninput="this.value=this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ ]/g,'')"
+                            required>
 
                     </div>
 
@@ -54,11 +47,12 @@
                             Descripción
                         </label>
 
-                        <textarea name="des_categoria"
-                                  id="edit_des_categoria"
-                                  class="form-control"
-                                  rows="4"
-                                  required></textarea>
+                        <textarea
+                            name="des_categoria"
+                            id="edit_des_categoria"
+                            class="form-control"
+                            rows="4"
+                            required></textarea>
 
                     </div>
 
@@ -83,4 +77,5 @@
 
         </div>
     </div>
+
 </div>

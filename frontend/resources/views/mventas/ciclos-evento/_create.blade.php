@@ -14,7 +14,7 @@
 
                 @csrf
 
-                <div class="modal-header bg-success text-white">
+                <div class="modal-header">
 
                     <h5 class="modal-title"
                         id="modalCrearCicloLabel">
@@ -46,21 +46,21 @@
                         </label>
 
                         <input type="text"
-                               name="nom_ciclo"
-                               id="nom_ciclo"
-                               class="form-control @error('nom_ciclo') is-invalid @enderror"
-                               value="{{ old('nom_ciclo') }}"
-                               maxlength="100"
-                               placeholder="Ingrese el nombre del ciclo"
-                               required>
+       name="nom_ciclo"
+       id="nom_ciclo"
+       class="form-control @error('nom_ciclo') is-invalid @enderror"
+       value="{{ old('nom_ciclo') }}"
+       maxlength="100"
+       placeholder="Ingrese el nombre del ciclo"
+       pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+"
+       oninput="this.value=this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ ]/g,'')"
+       required>
 
-                        @error('nom_ciclo')
-
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-
-                        @enderror
+@error('nom_ciclo')
+    <div class="invalid-feedback">
+        {{ $message }}
+    </div>
+@enderror
 
                     </div>
 

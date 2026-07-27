@@ -13,7 +13,7 @@
 
                 @csrf
 
-                <div class="modal-header bg-success text-white">
+                <div class="modal-header">
 
                     <h5 class="modal-title"
                         id="modalCrearLabel">
@@ -73,11 +73,12 @@
                         </label>
 
                         <input
-                            type="number"
-                            step="0.01"
-                            min="0"
+                            type="text"
                             class="form-control"
                             name="mon_total"
+                            inputmode="decimal"
+                            placeholder="Ingrese el total"
+                            oninput="this.value=this.value.replace(/[^0-9.]/g,'')"
                             required>
 
                     </div>

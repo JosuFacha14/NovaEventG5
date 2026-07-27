@@ -55,40 +55,6 @@
 
                         </div>
 
-
-                        {{-- EVENTO --}}
-                        <div class="col-md-6 mb-3">
-
-                            <label for="edit_cod_evento"
-                                   class="form-label">
-
-                                Evento
-                            </label>
-
-                            <select name="cod_evento"
-                                    id="edit_cod_evento"
-                                    class="form-control"
-                                    required>
-
-                                <option value="">
-                                    Seleccione un evento
-                                </option>
-
-                                @foreach($eventos as $evento)
-
-                                    <option value="{{ $evento['COD_EVENTO'] }}">
-
-                                        {{ $evento['NOM_EVENTO'] }}
-
-                                    </option>
-
-                                @endforeach
-
-                            </select>
-
-                        </div>
-
-
                         {{-- TIPO DE BOLETO --}}
                         <div class="col-md-6 mb-3">
 

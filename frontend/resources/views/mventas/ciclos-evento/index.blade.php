@@ -3,7 +3,23 @@
 @section('title', 'Ciclos de Evento')
 
 @section('content_header')
-    <h1>Catálogo de Ciclos de Evento</h1>
+<div class="row align-items-center">
+    <div class="col-sm-6">
+        <h3 class="mb-0">Catálogo de Ciclos de Evento</h3>
+    </div>
+
+    <div class="col-sm-6 text-end">
+        <button
+            class="btn btn-primary btn-sm"
+            data-bs-toggle="modal"
+            data-bs-target="#modalCrearCiclo">
+
+            <i class="bi bi-plus-lg me-1"></i>
+            Nuevo Ciclo
+
+        </button>
+    </div>
+</div>
 @stop
 
 @section('content')
@@ -24,25 +40,12 @@
 
     <div class="card-header">
 
-        <h3 class="card-title">
-            Ciclos de Evento Registrados
-        </h3>
+    <h3 class="card-title">
+    <i class="bi bi-arrow-repeat me-2"></i>
+    Ciclos de Evento Registrados
+</h3>
 
-        <div class="card-tools">
-
-            <button type="button"
-                    class="btn btn-success btn-sm"
-                    data-bs-toggle="modal"
-                    data-bs-target="#modalCrearCiclo">
-
-                <i class="bi bi-plus-lg"></i>
-                Nuevo Ciclo
-
-            </button>
-
-        </div>
-
-    </div>
+</div>
 
 
     <div class="card-body">
@@ -434,23 +437,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const id = this.getAttribute('data-id');
 
-            document.getElementById('edit_cod_ciclo').value =
-                id;
+document.getElementById('edit_nom_ciclo').value =
+    this.getAttribute('data-nombre');
 
-            document.getElementById('edit_nom_ciclo').value =
-                this.getAttribute('data-nombre');
+document.getElementById('edit_des_ciclo').value =
+    this.getAttribute('data-descripcion');
 
-            document.getElementById('edit_des_ciclo').value =
-                this.getAttribute('data-descripcion');
+let url =
+    "{{ route('ciclos-evento.update', ['id' => '__ID__']) }}";
 
+url = url.replace('__ID__', id);
 
-            let url =
-                "{{ route('ciclos-evento.update', ['id' => '__ID__']) }}";
-
-            url = url.replace('__ID__', id);
-
-            document.getElementById('formEditarCiclo').action =
-                url;
+document.getElementById('formEditarCiclo').action =
+    url;
 
         });
 

@@ -112,12 +112,23 @@
                                 Código de Reservación
                             </label>
 
-                            <input type="number"
-                                   id="edit_cod_reservacion"
-                                   name="cod_reservacion"
-                                   class="form-control"
-                                   min="1"
-                                   placeholder="Dejar vacío para mantener la actual">
+                            <select id="edit_cod_reservacion"
+        name="cod_reservacion"
+        class="form-control">
+
+    <option value="">
+        Seleccione una reservación
+    </option>
+
+    @foreach($reservaciones as $reservacion)
+
+        <option value="{{ $reservacion['COD_RESERVACION'] }}">
+            {{ $reservacion['COD_RESERVACION'] }}
+        </option>
+
+    @endforeach
+
+</select>
 
                         </div>
 
@@ -130,11 +141,13 @@
                             </label>
 
                             <input type="text"
-                                   id="edit_nom_evento"
-                                   name="nom_evento"
-                                   class="form-control"
-                                   maxlength="150"
-                                   required>
+                               id="edit_nom_evento"
+                               name="nom_evento"
+                               class="form-control"
+                               maxlength="150"
+                               pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+"
+                               oninput="this.value=this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ ]/g,'')"
+                               required>
 
                         </div>
 

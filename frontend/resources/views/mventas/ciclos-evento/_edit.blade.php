@@ -35,43 +35,27 @@
 
                 <div class="modal-body">
 
-                    {{-- CÓDIGO --}}
                     <div class="mb-3">
 
-                        <label for="edit_cod_ciclo"
-                               class="form-label">
-                            Código
-                        </label>
+    <label for="edit_nom_ciclo"
+           class="form-label">
 
-                        <input type="text"
-                               id="edit_cod_ciclo"
-                               class="form-control"
-                               readonly>
+        Nombre del Ciclo
+        <span class="text-danger">*</span>
 
-                    </div>
+    </label>
 
+    <input type="text"
+           name="nom_ciclo"
+           id="edit_nom_ciclo"
+           class="form-control"
+           maxlength="100"
+           pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+"
+           oninput="this.value=this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ ]/g,'')"
+           required>
 
-                    {{-- NOMBRE DEL CICLO --}}
-                    <div class="mb-3">
-
-                        <label for="edit_nom_ciclo"
-                               class="form-label">
-
-                            Nombre del Ciclo
-                            <span class="text-danger">*</span>
-
-                        </label>
-
-                        <input type="text"
-                               name="nom_ciclo"
-                               id="edit_nom_ciclo"
-                               class="form-control"
-                               maxlength="100"
-                               required>
-
-                    </div>
-
-
+</div>
+                    
                     {{-- DESCRIPCIÓN --}}
                     <div class="mb-3">
 

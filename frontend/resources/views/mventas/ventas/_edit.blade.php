@@ -20,7 +20,6 @@
                     <h5 class="modal-title">
 
                         <i class="bi bi-pencil"></i>
-
                         Editar Venta
 
                     </h5>
@@ -41,39 +40,15 @@
 
                     <div class="mb-3">
 
-                        <label>Cliente</label>
-
-                        <select
-                            name="cod_cliente"
-                            id="edit_cod_cliente"
-                            class="form-control"
-                            required>
-
-                            @foreach($clientes as $cliente)
-
-                                <option
-                                    value="{{ $cliente['COD_CLIENTE'] }}">
-
-                                    {{ $cliente['COD_CLIENTE'] }}
-
-                                </option>
-
-                            @endforeach
-
-                        </select>
-
-                    </div>
-
-                    <div class="mb-3">
-
                         <label>Total</label>
 
                         <input
-                            type="number"
-                            step="0.01"
-                            name="mon_total"
+                            type="text"
                             id="edit_mon_total"
+                            name="mon_total"
                             class="form-control"
+                            inputmode="decimal"
+                            oninput="this.value=this.value.replace(/[^0-9.]/g,'')"
                             required>
 
                     </div>
@@ -85,19 +60,12 @@
                         <select
                             name="metodo_pago"
                             id="edit_metodo_pago"
-                            class="form-control">
+                            class="form-control"
+                            required>
 
-                            <option value="EFECTIVO">
-                                EFECTIVO
-                            </option>
-
-                            <option value="TARJETA">
-                                TARJETA
-                            </option>
-
-                            <option value="TRANSFERENCIA">
-                                TRANSFERENCIA
-                            </option>
+                            <option value="EFECTIVO">EFECTIVO</option>
+                            <option value="TARJETA">TARJETA</option>
+                            <option value="TRANSFERENCIA">TRANSFERENCIA</option>
 
                         </select>
 
@@ -110,19 +78,12 @@
                         <select
                             name="estado_venta"
                             id="edit_estado_venta"
-                            class="form-control">
+                            class="form-control"
+                            required>
 
-                            <option value="PAGADA">
-                                PAGADA
-                            </option>
-
-                            <option value="PENDIENTE">
-                                PENDIENTE
-                            </option>
-
-                            <option value="CANCELADA">
-                                CANCELADA
-                            </option>
+                            <option value="PAGADA">PAGADA</option>
+                            <option value="PENDIENTE">PENDIENTE</option>
+                            <option value="CANCELADA">CANCELADA</option>
 
                         </select>
 
@@ -131,6 +92,15 @@
                 </div>
 
                 <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+
+                        Cancelar
+
+                    </button>
 
                     <button
                         type="submit"

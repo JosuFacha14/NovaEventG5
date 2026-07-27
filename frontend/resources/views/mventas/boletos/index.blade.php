@@ -3,7 +3,23 @@
 @section('title', 'Gestión de Boletos')
 
 @section('content_header')
-    <h1>Gestión de Boletos</h1>
+<div class="row align-items-center">
+    <div class="col-sm-6">
+        <h3 class="mb-0">Gestión de Boletos</h3>
+    </div>
+
+    <div class="col-sm-6 text-end">
+        <button
+            class="btn btn-primary btn-sm"
+            data-bs-toggle="modal"
+            data-bs-target="#modalCrear">
+
+            <i class="bi bi-plus-lg me-1"></i>
+            Nuevo Boleto
+
+        </button>
+    </div>
+</div>
 @stop
 
 @section('content')
@@ -47,25 +63,11 @@
     <div class="card-header">
 
         <h3 class="card-title">
-            Boletos Registrados
-        </h3>
-
-        <div class="card-tools">
-
-            <button type="button"
-                    class="btn btn-success btn-sm"
-                    data-bs-toggle="modal"
-                    data-bs-target="#modalCrear">
-
-                <i class="bi bi-plus-lg"></i>
-                Nuevo Boleto
-
-            </button>
-
-        </div>
+    <i class="bi bi-ticket-perforated-fill me-2"></i>
+    Boletos Registrados
+</h3>
 
     </div>
-
 
     <div class="card-body">
 
@@ -349,7 +351,6 @@ document.addEventListener('DOMContentLoaded', function () {
             let id = this.dataset.id;
 
             document.getElementById('edit_cod_boleto').value = id;
-            document.getElementById('edit_cod_evento').value = this.dataset.evento;
             document.getElementById('edit_tip_boleto').value = this.dataset.tipo;
             document.getElementById('edit_mon_precio').value = this.dataset.precio;
             document.getElementById('edit_num_disponible').value = this.dataset.disponible;
