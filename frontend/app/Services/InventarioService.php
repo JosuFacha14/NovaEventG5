@@ -142,14 +142,14 @@ class InventarioService
     // -------------------------------------------------------------------------
 
     public function listarReservas(): array
-    {
-        return $this->get('in/reserva');
-    }
+  {
+    return $this->get('in/reserva');
+  }
 
-    public function actualizarReserva(int $id, array $datos): array
-    {
-        return $this->put("in/reserva/{$id}", $datos);
-    }
+   public function actualizarReserva(int $id, array $datos): array
+  {
+    return $this->put("in/reserva/{$id}", $datos);
+  }
 
     // -------------------------------------------------------------------------
     // IN_ASIGNACION_EVENTO
@@ -174,4 +174,9 @@ class InventarioService
     {
         return $this->put("in/asignacion/{$id}", $datos);
     }
+
+    public function listarEventos(): array
+   {
+    return $this->get('in/evento');
+   }
 }

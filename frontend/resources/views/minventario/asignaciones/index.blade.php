@@ -197,11 +197,18 @@
                                 <label class="form-label">ID del Evento <span class="text-danger">*</span></label>
                                 <input type="number" name="cod_evento" class="form-control" required min="1"
                                        placeholder="Ej: 1">
+                                <small class="text-muted">Pendiente: combo de eventos por nombre</small>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">ID del Ítem <span class="text-danger">*</span></label>
-                                <input type="number" name="cod_item" class="form-control" required min="1"
-                                       placeholder="Ej: 5">
+                                <label class="form-label">Ítem <span class="text-danger">*</span></label>
+                                <select name="cod_item" class="form-select" required>
+                                    <option value="" selected disabled>Seleccione un ítem...</option>
+                                    @foreach($items as $item)
+                                        <option value="{{ $item['COD_ITEM'] }}">
+                                            #{{ $item['COD_ITEM'] }} — {{ $item['NOM_ITEM'] }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="row">
@@ -250,6 +257,14 @@
                 language: { url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json' },
                 pageLength: 10,
                 order: [[0, 'asc']],
+            });
+        }
+
+        // Select2 para el combo de ítem (buscable)
+        if (typeof $.fn.select2 !== 'undefined') {
+            $('#modalCrear select[name="cod_item"]').select2({
+                dropdownParent: $('#modalCrear'),
+                width: '100%'
             });
         }
     });

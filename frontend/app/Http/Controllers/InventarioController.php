@@ -240,43 +240,52 @@ class InventarioController extends Controller
     // IN_RESERVAS_INVENTARIO
     // -------------------------------------------------------------------------
 
-    public function reservasIndex()
-    {
-        try {
-            $reservas = $this->svc->listarReservas();
-        } catch (Throwable $e) {
-            $reservas = [];
-            session()->flash('error', 'No se pudo cargar las reservas: ' . $e->getMessage());
-        }
+     public function reservasIndex()
+{
+    $reservas = [];
+    $items    = [];
+    $eventos  = [];
 
-        return view('minventario.reservas.index', compact('reservas'));
+    try {
+        $reservas = $this->svc->listarReservas();
+        $items    = $this->svc->listarItems();
+    } catch (Throwable $e) {
+        session()->flash('error', 'No se pudo cargar las reservas: ' . $e->getMessage());
     }
 
-    public function reservasStore(Request $request)
-    {
-        $request->validate([
-            'cod_item'       => 'required|integer',
-            'cod_evento_res' => 'required|integer',
-            'can_reservada'  => 'required|integer|min:1',
-            'fec_inicio_res' => 'required|date',
-            'fec_fin_res'    => 'required|date|after_or_equal:fec_inicio_res',
-        ]);
-
-        try {
-            $this->svc->crearItem(array_merge(
-                $request->only([
-                    'cod_item', 'cod_evento_res', 'can_reservada',
-                    'fec_inicio_res', 'fec_fin_res', 'nom_solicitante', 'des_notas_res',
-                ]),
-                ['usr_registro' => session('usuario', 'admin')]
-            ));
-            session()->flash('success', 'Reserva creada correctamente.');
-        } catch (Throwable $e) {
-            session()->flash('error', 'Error al crear reserva: ' . $e->getMessage());
-        }
-
-        return redirect()->route('inventario.reservas.index');
+    try {
+        $eventos = $this->svc->listarEventos();
+    } catch (Throwable $e) {
+        // El combo de eventos queda vacío hasta que confirmemos el endpoint correcto
     }
+
+    return view('minventario.reservas.index', compact('reservas', 'items', 'eventos'));
+}
+      public function reservasStore(Request $request)
+{
+    $request->validate([
+        'cod_item'       => 'required|integer',
+        'cod_evento_res' => 'required|integer',
+        'can_reservada'  => 'required|integer|min:1',
+        'fec_inicio_res' => 'required|date',
+        'fec_fin_res'    => 'required|date|after_or_equal:fec_inicio_res',
+    ]);
+
+    try {
+        $this->svc->crearItem(array_merge(
+            $request->only([
+                'cod_item', 'cod_evento_res', 'can_reservada',
+                'fec_inicio_res', 'fec_fin_res', 'nom_solicitante', 'des_notas_res',
+            ]),
+            ['usr_registro' => session('usuario', 'admin')]
+        ));
+        session()->flash('success', 'Reserva creada correctamente.');
+    } catch (Throwable $e) {
+        session()->flash('error', 'Error al crear reserva: ' . $e->getMessage());
+    }
+
+    return redirect()->route('inventario.reservas.index');
+}
 
     public function reservasUpdate(Request $request, int $id)
     {
@@ -308,19 +317,19 @@ class InventarioController extends Controller
     // -------------------------------------------------------------------------
     // IN_ASIGNACION_EVENTO
     // -------------------------------------------------------------------------
-
-    public function asignacionesIndex()
-    {
-        try {
-            $asignaciones = $this->svc->listarAsignaciones();
-        } catch (Throwable $e) {
-            $asignaciones = [];
-            session()->flash('error', 'No se pudo cargar las asignaciones: ' . $e->getMessage());
-        }
-
-        return view('minventario.asignaciones.index', compact('asignaciones'));
+       public function asignacionesIndex()
+{
+    try {
+        $asignaciones = $this->svc->listarAsignaciones();
+        $items        = $this->svc->listarItems();
+    } catch (Throwable $e) {
+        $asignaciones = [];
+        $items        = [];
+        session()->flash('error', 'No se pudo cargar las asignaciones: ' . $e->getMessage());
     }
 
+    return view('minventario.asignaciones.index', compact('asignaciones', 'items'));
+}
     public function asignacionesStore(Request $request)
     {
         $request->validate([

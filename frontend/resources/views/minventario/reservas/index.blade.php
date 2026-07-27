@@ -53,7 +53,7 @@
                         <tr>
                             <td class="text-center">{{ $res['COD_RESERVA'] ?? '—' }}</td>
                             <td>{{ $res['NOM_ITEM'] ?? $res['COD_ITEM'] ?? '—' }}</td>
-                            <td class="text-center">{{ $res['COD_EVENTO'] ?? '—' }}</td>
+                            <td class="text-center">{{ $res['NOM_EVENTO'] ?? $res['COD_EVENTO'] ?? '—' }}</td>
                             <td class="text-center">{{ $res['CAN_RESERVADA'] ?? '—' }}</td>
                             <td class="text-center">
                                 {{ isset($res['FEC_INICIO_RESERVA']) ? substr($res['FEC_INICIO_RESERVA'], 0, 10) : '—' }}
@@ -170,15 +170,26 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Código de Ítem <span class="text-danger">*</span></label>
-                                <input type="number" name="cod_item" class="form-control" required
-                                       placeholder="ID del ítem a reservar">
-                                <small class="text-muted">Ver los IDs en Gestión de Ítems</small>
+                                <label class="form-label">Ítem <span class="text-danger">*</span></label>
+                                <select name="cod_item" class="form-select" required>
+                                    <option value="" selected disabled>Seleccione un ítem...</option>
+                                    @foreach($items as $item)
+                                        <option value="{{ $item['COD_ITEM'] }}">
+                                            #{{ $item['COD_ITEM'] }} — {{ $item['NOM_ITEM'] }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Código de Evento <span class="text-danger">*</span></label>
-                                <input type="number" name="cod_evento_res" class="form-control" required
-                                       placeholder="ID del evento">
+                                <label class="form-label">Evento <span class="text-danger">*</span></label>
+                                <select name="cod_evento_res" class="form-select" required>
+                                    <option value="" selected disabled>Seleccione un evento...</option>
+                                    @foreach($eventos as $evento)
+                                        <option value="{{ $evento['COD_EVENTO'] }}">
+                                            #{{ $evento['COD_EVENTO'] }} — {{ $evento['NOM_EVENTO'] }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="row">
@@ -230,6 +241,14 @@
                 language: { url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json' },
                 pageLength: 10,
                 order: [[0, 'asc']],
+            });
+        }
+
+        // Select2 para los combos de ítem y evento (buscables)
+        if (typeof $.fn.select2 !== 'undefined') {
+            $('#modalCrearReserva select[name="cod_item"], #modalCrearReserva select[name="cod_evento_res"]').select2({
+                dropdownParent: $('#modalCrearReserva'),
+                width: '100%'
             });
         }
     });
