@@ -126,7 +126,8 @@
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label">Solicitante</label>
                                                     <input type="text" name="nom_solicitante" class="form-control"
-                                                           value="{{ $res['NOM_SOLICITANTE'] ?? '' }}" maxlength="100">
+                                                           value="{{ $res['NOM_SOLICITANTE'] ?? '' }}" maxlength="100"
+                                                           pattern="[A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+" title="Solo se permiten letras y espacios">
                                                 </div>
                                             </div>
                                             <div class="mb-3">
@@ -190,7 +191,8 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Solicitante</label>
                                 <input type="text" name="nom_solicitante" class="form-control" maxlength="100"
-                                       placeholder="Nombre del solicitante">
+                                       placeholder="Nombre del solicitante"
+                                       pattern="[A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+" title="Solo se permiten letras y espacios">
                             </div>
                         </div>
                         <div class="row">

@@ -150,7 +150,8 @@
                                                 <div class="col-md-4 mb-3">
                                                     <label class="form-label">Responsable</label>
                                                     <input type="text" name="nom_resp_asig" class="form-control"
-                                                           value="{{ $asig['NOM_RESPONSABLE'] ?? '' }}" maxlength="100">
+                                                           value="{{ $asig['NOM_RESPONSABLE'] ?? '' }}" maxlength="100"
+                                                           pattern="[A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+" title="Solo se permiten letras y espacios">
                                                 </div>
                                             </div>
                                             <div class="mb-3">
@@ -221,7 +222,8 @@
                         <div class="mb-3">
                             <label class="form-label">Nombre del responsable</label>
                             <input type="text" name="nom_resp_asig" class="form-control" maxlength="100"
-                                   placeholder="Ej: Juan Pérez">
+                                   placeholder="Ej: Juan Pérez"
+                                   pattern="[A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+" title="Solo se permiten letras y espacios">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Observaciones</label>

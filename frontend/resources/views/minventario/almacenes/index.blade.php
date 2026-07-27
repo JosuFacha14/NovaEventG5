@@ -70,16 +70,13 @@
 
                                 {{-- Botón dar de baja --}}
                                 @if($alm['IND_ACTIVO'] ?? 1)
-                                    <form method="POST"
-                                          action="{{ route('inventario.almacenes.baja', $alm['COD_ALMACEN']) }}"
-                                          class="d-inline"
-                                          onsubmit="return confirm('¿Desactivar este almacén?')">
-                                        @csrf
-                                        @method('PUT')
-                                        <button type="submit" class="btn btn-danger btn-sm" title="Dar de baja">
-                                            <i class="bi bi-x-circle-fill"></i>
-                                        </button>
-                                    </form>
+                                    <button type="button" class="btn btn-danger btn-sm" title="Dar de baja"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modalConfirmarBaja"
+                                            data-action="{{ route('inventario.almacenes.baja', $alm['COD_ALMACEN']) }}"
+                                            data-nombre="{{ $alm['NOM_ALMACEN'] ?? '' }}">
+                                        <i class="bi bi-x-circle-fill"></i>
+                                    </button>
                                 @endif
                             </td>
                         </tr>
@@ -100,7 +97,8 @@
                                             <div class="mb-3">
                                                 <label class="form-label">Nombre <span class="text-danger">*</span></label>
                                                 <input type="text" name="nom_almacen" class="form-control"
-                                                       value="{{ $alm['NOM_ALMACEN'] ?? '' }}" required maxlength="100">
+                                                       value="{{ $alm['NOM_ALMACEN'] ?? '' }}" required maxlength="100"
+                                                       pattern="[A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+" title="Solo se permiten letras y espacios">
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Dirección / Ubicación</label>
@@ -150,7 +148,8 @@
                         <div class="mb-3">
                             <label class="form-label">Nombre <span class="text-danger">*</span></label>
                             <input type="text" name="nom_almacen" class="form-control" required maxlength="100"
-                                   placeholder="Ej: Bodega Central">
+                                   placeholder="Ej: Bodega Central"
+                                   pattern="[A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+" title="Solo se permiten letras y espacios">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Dirección / Ubicación</label>
@@ -174,12 +173,49 @@
         </div>
     </div>
 
+    {{-- Modal confirmar baja --}}
+    <div class="modal fade" id="modalConfirmarBaja" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title"><i class="bi bi-exclamation-triangle-fill me-1"></i> Confirmar baja</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Está seguro de que desea dar de baja el almacén <strong id="nombreAlmacenBaja"></strong>?</p>
+                    <p class="text-muted mb-0"><small>Esta acción desactivará el almacén. No se eliminarán los datos.</small></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <form id="formBajaAlmacen" method="POST" action="">
+                        @csrf
+                        @method('PUT')
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-person-dash-fill me-1"></i> Dar de baja
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @stop
 
 @section('js')
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        if (typeof $.fn.DataTable !== 'undefined') {
+        // Modal de confirmación de baja
+        var modalBaja = document.getElementById('modalConfirmarBaja');
+        if (modalBaja) {
+            modalBaja.addEventListener('show.bs.modal', function (event) {
+                var button = event.relatedTarget;
+                document.getElementById('nombreAlmacenBaja').textContent = button.getAttribute('data-nombre');
+                document.getElementById('formBajaAlmacen').action = button.getAttribute('data-action');
+            });
+        }
+
+        // Inicializar DataTable
+        if (typeof $.fn !== 'undefined' && typeof $.fn.DataTable !== 'undefined') {
             $('#tblAlmacenes').DataTable({
                 language: { url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json' },
                 pageLength: 10,
@@ -189,3 +225,4 @@
     });
 </script>
 @stop
+
