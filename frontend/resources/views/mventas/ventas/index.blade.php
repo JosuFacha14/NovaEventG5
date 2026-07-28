@@ -129,21 +129,6 @@
 
                         <td class="text-center">
 
-                            {{-- DETALLES --}}
-                            <button
-                                type="button"
-                                class="btn btn-primary btn-sm btnDetalles"
-                                title="Detalles de la venta"
-                                data-bs-toggle="modal"
-                                data-bs-target="#modalDetalles"
-                                data-id="{{ $venta['COD_VENTA'] }}">
-
-                                <i class="bi bi-list-ul"></i>
-                                Detalles
-
-                            </button>
-
-
                             {{-- VER --}}
                             <button
                                 class="btn btn-info btn-sm btnVer"
@@ -219,84 +204,6 @@
 @include('mventas.ventas._create')
 @include('mventas.ventas._edit')
 @include('mventas.ventas._view')
-
-
-{{-- MODAL DETALLES DE VENTA --}}
-<div class="modal fade"
-     id="modalDetalles"
-     tabindex="-1"
-     aria-labelledby="modalDetallesLabel"
-     aria-hidden="true">
-
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-
-        <div class="modal-content">
-
-            <div class="modal-header bg-primary text-white">
-
-                <h5 class="modal-title"
-                    id="modalDetallesLabel">
-
-                    <i class="bi bi-list-ul"></i>
-                    Detalles de la Venta
-                    <span id="numeroVentaDetalle"></span>
-
-                </h5>
-
-                <button
-                    type="button"
-                    class="btn-close btn-close-white"
-                    data-bs-dismiss="modal">
-                </button>
-
-            </div>
-
-            <div class="modal-body">
-
-                <div class="table-responsive">
-
-                    <table class="table table-bordered table-striped">
-
-                        <thead>
-
-                            <tr>
-                                <th>Código</th>
-                                <th>Boleto</th>
-                                <th>Cantidad</th>
-                                <th>Precio Unitario</th>
-                                <th>Subtotal</th>
-                            </tr>
-
-                        </thead>
-
-                        <tbody id="tablaDetallesVenta">
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </div>
-
-            <div class="modal-footer">
-
-                <button
-                    type="button"
-                    class="btn btn-secondary"
-                    data-bs-dismiss="modal">
-
-                    Cerrar
-
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
 
 
 {{-- MODAL CONFIRMAR BAJA --}}
@@ -389,66 +296,6 @@
 <script>
 
 document.addEventListener('DOMContentLoaded', function () {
-
-    /*
-    |--------------------------------------------------------------------------
-    | DETALLES DE LA VENTA
-    |--------------------------------------------------------------------------
-    */
-
-    const detallesVentas = @json($detalles);
-
-    document.querySelectorAll('.btnDetalles').forEach(function(boton){
-
-        boton.addEventListener('click', function(){
-
-            const idVenta = String(this.dataset.id);
-
-            document.getElementById('numeroVentaDetalle').textContent =
-                '#' + idVenta;
-
-            const tbody =
-                document.getElementById('tablaDetallesVenta');
-
-            tbody.innerHTML = '';
-
-            const detallesFiltrados = detallesVentas.filter(function(detalle){
-
-                return String(detalle.COD_VENTA) === idVenta;
-
-            });
-
-            if(detallesFiltrados.length === 0){
-
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="5" class="text-center">
-                            No existen detalles registrados para esta venta.
-                        </td>
-                    </tr>
-                `;
-
-                return;
-            }
-
-            detallesFiltrados.forEach(function(detalle){
-
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${detalle.COD_DETALLE}</td>
-                        <td>${detalle.COD_BOLETO}</td>
-                        <td>${detalle.NUM_CANTIDAD}</td>
-                        <td>L. ${Number(detalle.MON_PRECIO_UNIT).toFixed(2)}</td>
-                        <td>L. ${Number(detalle.MON_SUBTOTAL).toFixed(2)}</td>
-                    </tr>
-                `;
-
-            });
-
-        });
-
-    });
-
 
     /*
     |--------------------------------------------------------------------------

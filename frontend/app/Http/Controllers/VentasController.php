@@ -1084,9 +1084,6 @@ public function ventasUpdate(Request $request, $id)
 {
     $request->validate([
 
-        'cod_cliente' =>
-            'required|integer',
-
         'mon_total' =>
             'required|numeric|min:0',
 
