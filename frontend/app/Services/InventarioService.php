@@ -175,8 +175,13 @@ class InventarioService
         return $this->put("in/asignacion/{$id}", $datos);
     }
 
+    // -------------------------------------------------------------------------
+    // EVENTOS (consumo del módulo de Ventas, solo lectura)
+    // -------------------------------------------------------------------------
+
     public function listarEventos(): array
-   {
-    return $this->get('in/evento');
-   }
+    {
+        return $this->get('in/eventos-activos');
+    }
+
 }

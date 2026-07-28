@@ -168,7 +168,11 @@ class InventarioController extends Controller
             session()->flash('error', 'No se pudo cargar los ítems: ' . $e->getMessage());
         }
 
-        return view('minventario.items.index', compact('items'));
+        // Datos para los dropdowns de categoría y almacén
+        try { $categorias = $this->svc->listarCategorias(); } catch (Throwable $e) { $categorias = []; }
+        try { $almacenes  = $this->svc->listarAlmacenes();  } catch (Throwable $e) { $almacenes  = []; }
+
+        return view('minventario.items.index', compact('items', 'categorias', 'almacenes'));
     }
 
     public function itemsStore(Request $request)
@@ -240,52 +244,50 @@ class InventarioController extends Controller
     // IN_RESERVAS_INVENTARIO
     // -------------------------------------------------------------------------
 
-     public function reservasIndex()
-{
-    $reservas = [];
-    $items    = [];
-    $eventos  = [];
+    public function reservasIndex()
+    {
+        $reservas = [];
+        $items    = [];
+        $eventos  = [];
 
-    try {
-        $reservas = $this->svc->listarReservas();
-        $items    = $this->svc->listarItems();
-    } catch (Throwable $e) {
-        session()->flash('error', 'No se pudo cargar las reservas: ' . $e->getMessage());
+        try {
+            $reservas = $this->svc->listarReservas();
+        } catch (Throwable $e) {
+            session()->flash('error', 'No se pudo cargar las reservas: ' . $e->getMessage());
+        }
+
+        // Datos para los dropdowns de ítem y evento
+        try { $items   = $this->svc->listarItems();   } catch (Throwable $e) { $items   = []; }
+        try { $eventos = $this->svc->listarEventos(); } catch (Throwable $e) { $eventos = []; }
+
+        return view('minventario.reservas.index', compact('reservas', 'items', 'eventos'));
     }
 
-    try {
-        $eventos = $this->svc->listarEventos();
-    } catch (Throwable $e) {
-        // El combo de eventos queda vacío hasta que confirmemos el endpoint correcto
+    public function reservasStore(Request $request)
+    {
+        $request->validate([
+            'cod_item'       => 'required|integer',
+            'cod_evento_res' => 'required|integer',
+            'can_reservada'  => 'required|integer|min:1',
+            'fec_inicio_res' => 'required|date',
+            'fec_fin_res'    => 'required|date|after_or_equal:fec_inicio_res',
+        ]);
+
+        try {
+            $this->svc->crearItem(array_merge(
+                $request->only([
+                    'cod_item', 'cod_evento_res', 'can_reservada',
+                    'fec_inicio_res', 'fec_fin_res', 'nom_solicitante', 'des_notas_res',
+                ]),
+                ['usr_registro' => session('usuario', 'admin')]
+            ));
+            session()->flash('success', 'Reserva creada correctamente.');
+        } catch (Throwable $e) {
+            session()->flash('error', 'Error al crear reserva: ' . $e->getMessage());
+        }
+
+        return redirect()->route('inventario.reservas.index');
     }
-
-    return view('minventario.reservas.index', compact('reservas', 'items', 'eventos'));
-}
-      public function reservasStore(Request $request)
-{
-    $request->validate([
-        'cod_item'       => 'required|integer',
-        'cod_evento_res' => 'required|integer',
-        'can_reservada'  => 'required|integer|min:1',
-        'fec_inicio_res' => 'required|date',
-        'fec_fin_res'    => 'required|date|after_or_equal:fec_inicio_res',
-    ]);
-
-    try {
-        $this->svc->crearItem(array_merge(
-            $request->only([
-                'cod_item', 'cod_evento_res', 'can_reservada',
-                'fec_inicio_res', 'fec_fin_res', 'nom_solicitante', 'des_notas_res',
-            ]),
-            ['usr_registro' => session('usuario', 'admin')]
-        ));
-        session()->flash('success', 'Reserva creada correctamente.');
-    } catch (Throwable $e) {
-        session()->flash('error', 'Error al crear reserva: ' . $e->getMessage());
-    }
-
-    return redirect()->route('inventario.reservas.index');
-}
 
     public function reservasUpdate(Request $request, int $id)
     {
@@ -317,19 +319,22 @@ class InventarioController extends Controller
     // -------------------------------------------------------------------------
     // IN_ASIGNACION_EVENTO
     // -------------------------------------------------------------------------
-       public function asignacionesIndex()
-{
-    try {
-        $asignaciones = $this->svc->listarAsignaciones();
-        $items        = $this->svc->listarItems();
-    } catch (Throwable $e) {
-        $asignaciones = [];
-        $items        = [];
-        session()->flash('error', 'No se pudo cargar las asignaciones: ' . $e->getMessage());
-    }
 
-    return view('minventario.asignaciones.index', compact('asignaciones', 'items'));
-}
+    public function asignacionesIndex()
+    {
+        try {
+            $asignaciones = $this->svc->listarAsignaciones();
+        } catch (Throwable $e) {
+            $asignaciones = [];
+            session()->flash('error', 'No se pudo cargar las asignaciones: ' . $e->getMessage());
+        }
+
+        // Datos para los dropdowns de ítem y evento
+        try { $items   = $this->svc->listarItems();   } catch (Throwable $e) { $items   = []; }
+        try { $eventos = $this->svc->listarEventos(); } catch (Throwable $e) { $eventos = []; }
+
+        return view('minventario.asignaciones.index', compact('asignaciones', 'items', 'eventos'));
+    }
     public function asignacionesStore(Request $request)
     {
         $request->validate([

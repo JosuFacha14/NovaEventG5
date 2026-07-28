@@ -122,6 +122,14 @@ const selInventario = (filtros, callback) => {
   );
 };
 
+// Listar eventos activos (lectura de ve_eventos para dropdowns)
+const selEventos = (callback) => {
+  db.query(
+    "SELECT COD_EVENTO, NOM_EVENTO FROM ve_eventos WHERE IND_ACTIVO = '1' AND IND_ESTADO = 'ACTIVO' ORDER BY COD_EVENTO",
+    callback
+  );
+};
+
 module.exports = {
   insItem,
   updItem,
@@ -132,5 +140,6 @@ module.exports = {
   softDeleteItem,
   softDeleteCategoria,
   softDeleteAlmacen,
-  selInventario
+  selInventario,
+  selEventos
 };

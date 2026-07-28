@@ -159,6 +159,14 @@ const selPorEvento = (req, res) => {
   });
 };
 
+// Listar eventos activos (para dropdowns)
+const selEventos = (req, res) => {
+  model.selEventos((err, result) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(result);
+  });
+};
+
 module.exports = {
   insItem,
   updItem,
@@ -177,5 +185,6 @@ module.exports = {
   selPorAlmacen,
   selPorEvento,
   selReservas,
-  selAsignaciones
+  selAsignaciones,
+  selEventos
 };

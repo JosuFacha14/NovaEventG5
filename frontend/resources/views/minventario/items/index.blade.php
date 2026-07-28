@@ -151,6 +151,26 @@
                                                 </div>
 
                                             </div>
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Categoría</label>
+                                                    <select name="cod_categoria" class="form-select">
+                                                        <option value="">Seleccione una categoría...</option>
+                                                        @foreach($categorias as $cat)
+                                                            <option value="{{ $cat['COD_CATEGORIA'] }}" {{ ($item['COD_CATEGORIA'] ?? '') == $cat['COD_CATEGORIA'] ? 'selected' : '' }}>#{{ $cat['COD_CATEGORIA'] }} — {{ $cat['NOM_CATEGORIA'] }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Almacén</label>
+                                                    <select name="cod_almacen" class="form-select">
+                                                        <option value="">Seleccione un almacén...</option>
+                                                        @foreach($almacenes as $alm)
+                                                            <option value="{{ $alm['COD_ALMACEN'] }}" {{ ($item['COD_ALMACEN'] ?? '') == $alm['COD_ALMACEN'] ? 'selected' : '' }}>#{{ $alm['COD_ALMACEN'] }} — {{ $alm['NOM_ALMACEN'] }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -220,12 +240,22 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">ID Categoría</label>
-                                <input type="number" name="cod_categoria" class="form-control" min="1">
+                                <label class="form-label">Categoría</label>
+                                <select name="cod_categoria" class="form-select">
+                                    <option value="">Seleccione una categoría...</option>
+                                    @foreach($categorias as $cat)
+                                        <option value="{{ $cat['COD_CATEGORIA'] }}">#{{ $cat['COD_CATEGORIA'] }} — {{ $cat['NOM_CATEGORIA'] }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">ID Almacén</label>
-                                <input type="number" name="cod_almacen" class="form-control" min="1">
+                                <label class="form-label">Almacén</label>
+                                <select name="cod_almacen" class="form-select">
+                                    <option value="">Seleccione un almacén...</option>
+                                    @foreach($almacenes as $alm)
+                                        <option value="{{ $alm['COD_ALMACEN'] }}">#{{ $alm['COD_ALMACEN'] }} — {{ $alm['NOM_ALMACEN'] }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="row">

@@ -69,4 +69,7 @@ router.get('/evento/:id', ctrl.selPorEvento);
 // actualizar asignacion (retornado/perdido ajustan automaticamente las cantidades del item)
 router.put('/asignacion/:id', ctrl.updAsignacion);
 
+// ruta de eventos activos (lectura para dropdowns)
+router.get('/eventos-activos', ctrl.selEventos);
+
 module.exports = router;

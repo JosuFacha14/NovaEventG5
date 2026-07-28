@@ -96,6 +96,26 @@
                                         </div>
                                         <div class="modal-body">
                                             <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Ítem <span class="text-danger">*</span></label>
+                                                    <select name="cod_item" class="form-select" required>
+                                                        <option value="">Seleccione un ítem...</option>
+                                                        @foreach($items as $item)
+                                                            <option value="{{ $item['COD_ITEM'] }}" {{ ($res['COD_ITEM'] ?? '') == $item['COD_ITEM'] ? 'selected' : '' }}>#{{ $item['COD_ITEM'] }} — {{ $item['NOM_ITEM'] }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Evento <span class="text-danger">*</span></label>
+                                                    <select name="cod_evento_res" class="form-select" required>
+                                                        <option value="">Seleccione un evento...</option>
+                                                        @foreach($eventos as $ev)
+                                                            <option value="{{ $ev['COD_EVENTO'] }}" {{ ($res['COD_EVENTO'] ?? '') == $ev['COD_EVENTO'] ? 'selected' : '' }}>#{{ $ev['COD_EVENTO'] }} — {{ $ev['NOM_EVENTO'] }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="row">
                                                 <div class="col-md-4 mb-3">
                                                     <label class="form-label">Cantidad reservada <span class="text-danger">*</span></label>
                                                     <input type="number" name="can_reservada" class="form-control"
@@ -173,22 +193,18 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Ítem <span class="text-danger">*</span></label>
                                 <select name="cod_item" class="form-select" required>
-                                    <option value="" selected disabled>Seleccione un ítem...</option>
+                                    <option value="">Seleccione un ítem...</option>
                                     @foreach($items as $item)
-                                        <option value="{{ $item['COD_ITEM'] }}">
-                                            #{{ $item['COD_ITEM'] }} — {{ $item['NOM_ITEM'] }}
-                                        </option>
+                                        <option value="{{ $item['COD_ITEM'] }}">#{{ $item['COD_ITEM'] }} — {{ $item['NOM_ITEM'] }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Evento <span class="text-danger">*</span></label>
                                 <select name="cod_evento_res" class="form-select" required>
-                                    <option value="" selected disabled>Seleccione un evento...</option>
-                                    @foreach($eventos as $evento)
-                                        <option value="{{ $evento['COD_EVENTO'] }}">
-                                            #{{ $evento['COD_EVENTO'] }} — {{ $evento['NOM_EVENTO'] }}
-                                        </option>
+                                    <option value="">Seleccione un evento...</option>
+                                    @foreach($eventos as $ev)
+                                        <option value="{{ $ev['COD_EVENTO'] ?? $ev['id'] ?? '' }}">#{{ $ev['COD_EVENTO'] ?? $ev['id'] ?? '' }} — {{ $ev['NOM_EVENTO'] ?? $ev['nombre'] ?? '' }}</option>
                                     @endforeach
                                 </select>
                             </div>
