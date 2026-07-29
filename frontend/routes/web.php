@@ -2,23 +2,27 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return redirect()->route('dashboard');
+require base_path('routes/auth.php');
+
+Route::middleware(['auth.sesion'])->group(function () {
+    Route::get('/', function () {
+        return redirect()->route('dashboard');
+    });
+
+    Route::get('/dashboard', fn () => view('admin.dashboard'))->name('dashboard');
+
+    // Rutas del modulo Personas
+    require base_path('routes/personas.php');
+
+    // Rutas del modulo de Reservaciones
+    require base_path('routes/reservacion.php');
+
+    // Rutas del modulo Ventas
+    require base_path('routes/ventas.php');
+
+    // Rutas del modulo Inventario
+    require base_path('routes/inventario.php');
+
+    // Rutas del modulo Reportes
+    require base_path('routes/reportes.php');
 });
-
-Route::get('/dashboard', fn () => view('admin.dashboard'))->name('dashboard');
-
-// Rutas del módulo Personas
-require base_path('routes/personas.php');
-
-// Rutas del módulo de Reservaciones
-require base_path('routes/reservacion.php');
-
-// Rutas del módulo Ventas
-require base_path('routes/ventas.php');
-
-// Rutas del módulo Inventario
-require base_path('routes/inventario.php');
-
-// Rutas del módulo Reportes
-require base_path('routes/reportes.php');

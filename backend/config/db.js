@@ -1,6 +1,6 @@
 //constante para el paquete de mysql
 const mysql = require('mysql2');
-//creamos la conexion a la base de datos (pool para soportar getConnection)
+//creamos la conexion a la base de datos 
 const mysqlConnection = mysql.createPool({
   host: 'localhost',
   port: 3306,

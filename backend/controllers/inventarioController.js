@@ -163,7 +163,7 @@ const selPorEvento = (req, res) => {
 const selEventos = (req, res) => {
   model.selEventos((err, result) => {
     if (err) return res.status(500).json({ error: err.message });
-    res.json(result);
+    res.json(result[0] || []);
   });
 };
 

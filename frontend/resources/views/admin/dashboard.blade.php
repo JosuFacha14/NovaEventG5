@@ -12,10 +12,16 @@
 
 @section('content')
 
-{{-- ═══════════════════════════════════════════════════════
-     HERO: Logo + Título en banner fino horizontal
-═══════════════════════════════════════════════════════ --}}
-<div class="card border-0 shadow-sm mb-4 overflow-hidden"
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert" style="border-left: 5px solid #198754;">
+        <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
+{{--HERO: Logo + Título en banner fino horizontañ --}}
+
+<div class="card border-0 shadow-sm mb-4 overflowhidden"
      style="background: linear-gradient(120deg, #0d1b2a 0%, #1a2f4a 60%, #162840 100%);">
     <div class="card-body py-3 px-4 d-flex align-items-center gap-4">
         <img src="{{ asset('images/NovaEvent.jpeg') }}"
@@ -34,9 +40,7 @@
     </div>
 </div>
 
-{{-- ═══════════════════════════════════════════════════════
-     OBJETIVO GENERAL
-═══════════════════════════════════════════════════════ --}}
+{{--OBJETIVO GENERAL --}}
 <div class="row mb-3">
     <div class="col-12">
         <div class="p-3 rounded-3 d-flex align-items-start gap-3"
@@ -58,9 +62,7 @@
     </div>
 </div>
 
-{{-- ═══════════════════════════════════════════════════════
-     OBJETIVOS ESPECÍFICOS — tarjetas estilo dashboard
-═══════════════════════════════════════════════════════ --}}
+{{--OBJETIVOS ESPECÍFICOS — tarjetas estilo dashboard --}}
 <div class="mb-1">
     <div class="d-flex align-items-center gap-2 mb-3">
         <i class="bi bi-list-check" style="color:#1a6fc4; font-size:1.1rem;"></i>
@@ -98,6 +100,21 @@
             </div>
         </div>
 
+        {{-- Desarrollar --}}
+        <div class="col-6 col-md-4 col-xl">
+            <div class="p-3 rounded-3 h-100 text-center"
+                 style="background: var(--bs-tertiary-bg); border-top: 4px solid #fd7e14;">
+                <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-2"
+                     style="width:46px; height:46px; background:#fd7e1420;">
+                    <i class="bi bi-cart-fill" style="color:#fd7e14; font-size:1.2rem;"></i>
+                </div>
+                <h6 class="fw-bold mb-1" style="color:#fd7e14; font-size:0.85rem;">Desarrollar</h6>
+                <p class="mb-0 text-secondary" style="font-size:0.75rem; line-height:1.4;">
+                    Un sistema de supervisión de reservaciones y ventas en tiempo real.
+                </p>
+            </div>
+        </div>
+
         {{-- Optimizar --}}
         <div class="col-6 col-md-4 col-xl">
             <div class="p-3 rounded-3 h-100 text-center"
@@ -109,21 +126,6 @@
                 <h6 class="fw-bold mb-1" style="color:#198754; font-size:0.85rem;">Optimizar</h6>
                 <p class="mb-0 text-secondary" style="font-size:0.75rem; line-height:1.4;">
                     La gestión de recursos e inventario mediante control automatizado.
-                </p>
-            </div>
-        </div>
-
-        {{-- Desarrollar --}}
-        <div class="col-6 col-md-4 col-xl">
-            <div class="p-3 rounded-3 h-100 text-center"
-                 style="background: var(--bs-tertiary-bg); border-top: 4px solid #fd7e14;">
-                <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-2"
-                     style="width:46px; height:46px; background:#fd7e1420;">
-                    <i class="bi bi-cart-fill" style="color:#fd7e14; font-size:1.2rem;"></i>
-                </div>
-                <h6 class="fw-bold mb-1" style="color:#fd7e14; font-size:0.85rem;">Desarrollar</h6>
-                <p class="mb-0 text-secondary" style="font-size:0.75rem; line-height:1.4;">
-                    Un sistema de supervisión de reservaciones en tiempo real.
                 </p>
             </div>
         </div>
@@ -146,9 +148,7 @@
     </div>
 </div>
 
-{{-- ═══════════════════════════════════════════════════════
-     MÓDULOS DEL SISTEMA — tarjetas navegables
-═══════════════════════════════════════════════════════ --}}
+{{-- MODULOS DEL SISTEMA — tarjetas navegables  --}}
 <div class="mt-4 mb-2">
     <div class="d-flex align-items-center gap-2 mb-3">
         <i class="bi bi-grid-fill" style="color:#0d1b2a; font-size:1.1rem;"></i>

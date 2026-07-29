@@ -75,17 +75,6 @@
                                         data-bs-target="#modalEditarProveedor">
                                     <i class="bi bi-pencil-fill"></i>
                                 </button>
-                                {{-- Soft-Delete --}}
-                                <form method="POST"
-                                      action="{{ url('proveedores/' . $pv['COD_PERSONA']) }}"
-                                      class="d-inline form-soft-delete">
-                                    @csrf
-                                    @method('PUT')
-                                    <input type="hidden" name="accion" value="SOFT_DELETE">
-                                    <button type="submit" class="btn btn-danger btn-sm" title="Desactivar">
-                                        <i class="bi bi-x-circle-fill"></i>
-                                    </button>
-                                </form>
                             </td>
                         </tr>
                     @empty
@@ -98,7 +87,7 @@
         </div>
     </x-adminlte-card>
 
-    {{-- ════════ MODAL: CREAR ════════ --}}
+    {{-- MODAL: CREAR --}}
     <div class="modal fade" id="modalCrearProveedor" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
@@ -149,7 +138,7 @@
         </div>
     </div>
 
-    {{-- ════════ MODAL: EDITAR ════════ --}}
+    {{-- MODAL: EDITAR --}}
     <div class="modal fade" id="modalEditarProveedor" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
@@ -222,12 +211,6 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('editCategoriaProv').value  = this.dataset.categoria;
             document.getElementById('formEditarProveedor').action =
                 '{{ url("proveedores") }}/' + this.dataset.id;
-        });
-    });
-
-    document.querySelectorAll('.form-soft-delete').forEach(function (form) {
-        form.addEventListener('submit', function (e) {
-            if (!confirm('¿Desactivar este proveedor del sistema?')) { e.preventDefault(); }
         });
     });
 

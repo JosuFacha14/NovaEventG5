@@ -17,7 +17,7 @@
 
 @section('content')
 
-    {{-- ── Alertas de sesión ── --}}
+    {{--  Alertas de sesión  --}}
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             <i class="bi bi-check-circle me-1"></i> {{ session('success') }}
@@ -31,7 +31,7 @@
         </div>
     @endif
 
-    {{-- ── Tabla de personas ── --}}
+    {{--  Tabla de personas  --}}
     <x-adminlte-card title="Listado de Personas" icon="bi bi-people" theme="primary" collapsible>
         <div class="table-responsive">
             <table id="tblPersonas" class="table table-bordered table-hover table-sm align-middle">
@@ -116,9 +116,7 @@
         </div>
     </x-adminlte-card>
 
-    {{-- ════════════════════════════════════════════════════════════
-         MODAL: CREAR PERSONA
-    ════════════════════════════════════════════════════════════ --}}
+{{-- MODAL: CREAR PERSONA --}}
     <div class="modal fade" id="modalCrear" tabindex="-1" aria-labelledby="modalCrearLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
@@ -135,11 +133,11 @@
                     <div class="modal-body">
                         <div class="row g-3">
 
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <label class="form-label fw-semibold">DNI <span class="text-danger">*</span></label>
-                                <input type="text" name="dni" class="form-control" maxlength="255" required 
-                                       pattern="[0-9]+" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
-                                <div class="invalid-feedback">El DNI es obligatorio y solo debe contener números.</div>
+                                <input type="text" name="dni" class="form-control" maxlength="13" required 
+                                       pattern="^[0-9]+$" title="El DNI solo debe contener números">
+                                <div class="invalid-feedback">Ingrese un DNI válido (solo números, máx 13 dígitos).</div>
                             </div>
 
                             <div class="col-md-4">
@@ -217,9 +215,7 @@
         </div>
     </div>
 
-    {{-- ════════════════════════════════════════════════════════════
-         MODAL: EDITAR PERSONA
-    ════════════════════════════════════════════════════════════ --}}
+    {{-- MODAL: EDITAR PERSONA --}}
     <div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
@@ -239,8 +235,8 @@
 
                             <div class="col-md-4">
                                 <label class="form-label fw-semibold">DNI</label>
-                                <input type="text" name="dni" id="edit_dni" class="form-control" maxlength="255"
-                                       pattern="[0-9]+" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                                <input type="text" name="dni" id="edit_dni" class="form-control" maxlength="13"
+                                       pattern="^[0-9]+$" oninput="this.value = this.value.replace(/[^0-9]/g, '');" title="El DNI solo debe contener números">
                             </div>
 
                             <div class="col-md-4">
@@ -311,9 +307,7 @@
         </div>
     </div>
 
-    {{-- ════════════════════════════════════════════════════════════
-         MODAL: CONFIRMAR BAJA
-    ════════════════════════════════════════════════════════════ --}}
+    {{--  MODAL: CONFIRMAR BAJA --}}
     <div class="modal fade" id="modalBaja" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">

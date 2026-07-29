@@ -44,7 +44,7 @@ class PersonasController extends Controller
                     'dni', 'primer_nombre', 'segundo_nombre', 'apellido',
                     'sexo', 'est_civil', 'edad', 'tip_persona',
                 ]),
-                ['usr_ingreso' => session('usuario', 'admin')]
+                ['usr_ingreso' => session('usuario')['NOMBRE_USR'] ?? session('usuario')['nombreUsr'] ?? session('usuario')['nombre_usr'] ?? 'admin']
             ));
             session()->flash('success', 'Persona creada correctamente.');
         } catch (Throwable $e) {
@@ -88,7 +88,7 @@ class PersonasController extends Controller
     {
         if ($request->input('accion') === 'SOFT_DELETE') {
             try {
-                $this->svc->desactivarPersona($id, session('usuario', 'admin'));
+                $this->svc->desactivarPersona($id, session('usuario')['NOMBRE_USR'] ?? session('usuario')['nombreUsr'] ?? session('usuario')['nombre_usr'] ?? 'admin');
                 session()->flash('success', 'Persona desactivada correctamente.');
             } catch (Throwable $e) {
                 session()->flash('error', 'Error al desactivar: ' . $e->getMessage());
@@ -117,7 +117,7 @@ class PersonasController extends Controller
                     'cargo', 'fec_contratacion', 'salario',
                     'empresa_prov', 'categoria_serv',
                 ]),
-                ['usr_ingreso' => session('usuario', 'admin')]
+                ['usr_ingreso' => session('usuario')['NOMBRE_USR'] ?? session('usuario')['nombreUsr'] ?? session('usuario')['nombre_usr'] ?? 'admin']
             ));
             session()->flash('success', 'Persona actualizada correctamente.');
         } catch (Throwable $e) {
@@ -139,7 +139,7 @@ class PersonasController extends Controller
         try {
             $this->svc->agregarTelefono($id, array_merge(
                 $request->only(['num_area', 'num_telefono', 'tip_telefono']),
-                ['usr_ingreso' => session('usuario', 'admin')]
+                ['usr_ingreso' => session('usuario')['NOMBRE_USR'] ?? session('usuario')['nombreUsr'] ?? session('usuario')['nombre_usr'] ?? 'admin']
             ));
             session()->flash('success', 'Teléfono agregado correctamente.');
         } catch (Throwable $e) {
@@ -162,7 +162,7 @@ class PersonasController extends Controller
         try {
             $this->svc->agregarCorreo($id, array_merge(
                 $request->only(['usuario_correo', 'servidor_correo', 'tip_correo']),
-                ['usr_ingreso' => session('usuario', 'admin')]
+                ['usr_ingreso' => session('usuario')['NOMBRE_USR'] ?? session('usuario')['nombreUsr'] ?? session('usuario')['nombre_usr'] ?? 'admin']
             ));
             session()->flash('success', 'Correo agregado correctamente.');
         } catch (Throwable $e) {
@@ -251,7 +251,7 @@ class PersonasController extends Controller
         try {
             $this->svc->crearTipoCliente(array_merge(
                 $request->only(['nom_tipo_cli', 'des_tipo_cli', 'ind_tipo_cli']),
-                ['usr_ingreso' => session('usuario', 'admin')]
+                ['usr_ingreso' => session('usuario')['NOMBRE_USR'] ?? session('usuario')['nombreUsr'] ?? session('usuario')['nombre_usr'] ?? 'admin']
             ));
             session()->flash('success', 'Tipo de cliente creado correctamente.');
         } catch (Throwable $e) {
@@ -265,7 +265,7 @@ class PersonasController extends Controller
     {
         if ($request->input('accion') === 'SOFT_DELETE') {
             try {
-                $this->svc->desactivarTipoCliente($id, session('usuario', 'admin'));
+                $this->svc->desactivarTipoCliente($id, session('usuario')['NOMBRE_USR'] ?? session('usuario')['nombreUsr'] ?? session('usuario')['nombre_usr'] ?? 'admin');
                 session()->flash('success', 'Tipo de cliente desactivado correctamente.');
             } catch (Throwable $e) {
                 session()->flash('error', 'Error al desactivar tipo de cliente: ' . $e->getMessage());
@@ -284,7 +284,7 @@ class PersonasController extends Controller
         try {
             $this->svc->actualizarTipoCliente($id, array_merge(
                 $request->only(['nom_tipo_cli', 'des_tipo_cli', 'ind_tipo_cli']),
-                ['usr_ingreso' => session('usuario', 'admin')]
+                ['usr_ingreso' => session('usuario')['NOMBRE_USR'] ?? session('usuario')['nombreUsr'] ?? session('usuario')['nombre_usr'] ?? 'admin']
             ));
             session()->flash('success', 'Tipo de cliente actualizado correctamente.');
         } catch (Throwable $e) {
@@ -328,7 +328,7 @@ class PersonasController extends Controller
                     'cod_persona', 'cod_tipo_usr', 'nombre',
                     'clave', 'token', 'ind_usr', 'ind_primer_ing',
                 ]),
-                ['usr_ingreso' => session('usuario', 'admin')]
+                ['usr_ingreso' => session('usuario')['NOMBRE_USR'] ?? session('usuario')['nombreUsr'] ?? session('usuario')['nombre_usr'] ?? 'admin']
             ));
             session()->flash('success', 'Usuario creado correctamente.');
         } catch (Throwable $e) {
@@ -342,7 +342,7 @@ class PersonasController extends Controller
     {
         if ($request->input('accion') === 'SOFT_DELETE') {
             try {
-                $this->svc->desactivarUsuario($id, session('usuario', 'admin'));
+                $this->svc->desactivarUsuario($id, session('usuario')['NOMBRE_USR'] ?? session('usuario')['nombreUsr'] ?? session('usuario')['nombre_usr'] ?? 'admin');
                 session()->flash('success', 'Usuario desactivado correctamente.');
             } catch (Throwable $e) {
                 session()->flash('error', 'Error al desactivar usuario: ' . $e->getMessage());
@@ -367,7 +367,7 @@ class PersonasController extends Controller
                 $request->validate(['clave' => 'string|min:6|max:2000']);
                 $datos['clave'] = $request->input('clave');
             }
-            $datos['usr_ingreso'] = session('usuario', 'admin');
+            $datos['usr_ingreso'] = session('usuario')['NOMBRE_USR'] ?? session('usuario')['nombreUsr'] ?? session('usuario')['nombre_usr'] ?? 'admin';
 
             $this->svc->actualizarUsuario($id, $datos);
             session()->flash('success', 'Usuario actualizado correctamente.');
@@ -406,7 +406,7 @@ class PersonasController extends Controller
         try {
             $this->svc->crearCliente(array_merge(
                 $request->only(['cod_persona', 'cod_tipo_cli', 'nom_empresa', 'ind_cliente']),
-                ['usr_ingreso' => session('usuario', 'admin')]
+                ['usr_ingreso' => session('usuario')['NOMBRE_USR'] ?? session('usuario')['nombreUsr'] ?? session('usuario')['nombre_usr'] ?? 'admin']
             ));
             session()->flash('success', 'Cliente creado correctamente.');
         } catch (Throwable $e) {
@@ -420,7 +420,7 @@ class PersonasController extends Controller
     {
         if ($request->input('accion') === 'SOFT_DELETE') {
             try {
-                $this->svc->desactivarCliente($id, session('usuario', 'admin'));
+                $this->svc->desactivarCliente($id, session('usuario')['NOMBRE_USR'] ?? session('usuario')['nombreUsr'] ?? session('usuario')['nombre_usr'] ?? 'admin');
                 session()->flash('success', 'Cliente desactivado correctamente.');
             } catch (Throwable $e) {
                 session()->flash('error', 'Error al desactivar cliente: ' . $e->getMessage());
@@ -440,7 +440,7 @@ class PersonasController extends Controller
 
             $this->svc->actualizarCliente($id, array_merge(
                 $datos,
-                ['usr_ingreso' => session('usuario', 'admin')]
+                ['usr_ingreso' => session('usuario')['NOMBRE_USR'] ?? session('usuario')['nombreUsr'] ?? session('usuario')['nombre_usr'] ?? 'admin']
             ));
             session()->flash('success', 'Cliente actualizado correctamente.');
         } catch (Throwable $e) {
@@ -479,7 +479,7 @@ class PersonasController extends Controller
         try {
             $this->svc->crearEmpleado(array_merge(
                 $request->only(['cod_persona', 'cargo', 'fec_contratacion', 'salario']),
-                ['usr_ingreso' => session('usuario', 'admin')]
+                ['usr_ingreso' => session('usuario')['NOMBRE_USR'] ?? session('usuario')['nombreUsr'] ?? session('usuario')['nombre_usr'] ?? 'admin']
             ));
             session()->flash('success', 'Empleado registrado correctamente.');
         } catch (Throwable $e) {
@@ -493,7 +493,7 @@ class PersonasController extends Controller
     {
         if ($request->input('accion') === 'SOFT_DELETE') {
             try {
-                $this->svc->desactivarEmpleado($id, session('usuario', 'admin'));
+                $this->svc->desactivarEmpleado($id, session('usuario')['NOMBRE_USR'] ?? session('usuario')['nombreUsr'] ?? session('usuario')['nombre_usr'] ?? 'admin');
                 session()->flash('success', 'Empleado desactivado correctamente.');
             } catch (Throwable $e) {
                 session()->flash('error', 'Error al desactivar empleado: ' . $e->getMessage());
@@ -512,7 +512,7 @@ class PersonasController extends Controller
         try {
             $this->svc->actualizarEmpleado($id, array_merge(
                 $request->only(['cargo', 'fec_contratacion', 'salario']),
-                ['usr_ingreso' => session('usuario', 'admin')]
+                ['usr_ingreso' => session('usuario')['NOMBRE_USR'] ?? session('usuario')['nombreUsr'] ?? session('usuario')['nombre_usr'] ?? 'admin']
             ));
             session()->flash('success', 'Empleado actualizado correctamente.');
         } catch (Throwable $e) {
@@ -557,7 +557,7 @@ class PersonasController extends Controller
 
             $this->svc->crearProveedor(array_merge(
                 $datos,
-                ['usr_ingreso' => session('usuario', 'admin')]
+                ['usr_ingreso' => session('usuario')['NOMBRE_USR'] ?? session('usuario')['nombreUsr'] ?? session('usuario')['nombre_usr'] ?? 'admin']
             ));
             session()->flash('success', 'Proveedor registrado correctamente.');
         } catch (Throwable $e) {
@@ -571,7 +571,7 @@ class PersonasController extends Controller
     {
         if ($request->input('accion') === 'SOFT_DELETE') {
             try {
-                $this->svc->desactivarProveedor($id, session('usuario', 'admin'));
+                $this->svc->desactivarProveedor($id, session('usuario')['NOMBRE_USR'] ?? session('usuario')['nombreUsr'] ?? session('usuario')['nombre_usr'] ?? 'admin');
                 session()->flash('success', 'Proveedor desactivado correctamente.');
             } catch (Throwable $e) {
                 session()->flash('error', 'Error al desactivar proveedor: ' . $e->getMessage());
@@ -595,7 +595,7 @@ class PersonasController extends Controller
 
             $this->svc->actualizarProveedor($id, array_merge(
                 $datos,
-                ['usr_ingreso' => session('usuario', 'admin')]
+                ['usr_ingreso' => session('usuario')['NOMBRE_USR'] ?? session('usuario')['nombreUsr'] ?? session('usuario')['nombre_usr'] ?? 'admin']
             ));
             session()->flash('success', 'Proveedor actualizado correctamente.');
         } catch (Throwable $e) {

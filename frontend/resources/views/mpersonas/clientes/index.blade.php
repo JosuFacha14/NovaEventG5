@@ -76,16 +76,12 @@
                                     <i class="bi bi-pencil-fill"></i>
                                 </button>
                                 {{-- Soft-Delete --}}
-                                <form method="POST"
-                                      action="{{ url('clientes/' . $c['COD_PERSONA']) }}"
-                                      class="d-inline form-soft-delete">
-                                    @csrf
-                                    @method('PUT')
-                                    <input type="hidden" name="accion" value="SOFT_DELETE">
-                                    <button type="submit" class="btn btn-danger btn-sm" title="Desactivar">
-                                        <i class="bi bi-person-slash"></i>
-                                    </button>
-                                </form>
+                                <button type="button" class="btn btn-danger btn-sm btn-desactivar-cliente" title="Desactivar"
+                                        data-id="{{ $c['COD_PERSONA'] }}"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modalDesactivarCliente">
+                                    <i class="bi bi-person-slash"></i>
+                                </button>
                             </td>
                         </tr>
                     @empty
@@ -98,7 +94,7 @@
         </div>
     </x-adminlte-card>
 
-    {{-- ════════ MODAL: CREAR ════════ --}}
+    {{-- MODAL: CREAR --}}
     <div class="modal fade" id="modalCrearCliente" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
@@ -159,7 +155,7 @@
         </div>
     </div>
 
-    {{-- ════════ MODAL: EDITAR ════════ --}}
+    {{-- MODAL: EDITAR --}}
     <div class="modal fade" id="modalEditarCliente" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
@@ -208,6 +204,34 @@
         </div>
     </div>
 
+    {{-- MODAL: DESACTIVAR --}}
+    <div class="modal fade" id="modalDesactivarCliente" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title"><i class="bi bi-exclamation-triangle-fill me-1"></i> Desactivar Cliente</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <form method="POST" action="" id="formDesactivarCliente">
+                    @csrf
+                    @method('PUT')
+                    <input type="hidden" name="accion" value="SOFT_DELETE">
+                    <div class="modal-body">
+                        <p class="mb-0 fs-5 text-center">¿Está seguro que desea desactivar a este cliente del sistema?</p>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="bi bi-x-lg me-1"></i> Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-check-circle-fill me-1"></i> Sí, desactivar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 @stop
 
 @section('plugins.Datatables', true)
@@ -245,9 +269,10 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    document.querySelectorAll('.form-soft-delete').forEach(function (form) {
-        form.addEventListener('submit', function (e) {
-            if (!confirm('¿Desactivar este cliente?')) { e.preventDefault(); }
+    document.querySelectorAll('.btn-desactivar-cliente').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            document.getElementById('formDesactivarCliente').action =
+                '{{ url("clientes") }}/' + this.dataset.id;
         });
     });
 

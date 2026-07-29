@@ -1,43 +1,39 @@
 @php
-    $user = auth()->user();
-    $name = $user->name ?? ($user->email ?? 'Guest');
-    $avatar = (config('adminlte.usermenu_image') && ! empty($user?->profile_photo_url))
-        ? $user->profile_photo_url
-        : asset('vendor/adminlte/img/user2-160x160.jpg');
-    $memberSince = $user?->created_at ? $user->created_at->format('M. Y') : null;
+    $user = session('usuario');
+    // Priorizar NOMBRE_USR que es lo que devuelve el SP de login
+    $name = 'Usuario';
+    if (!empty($user['NOMBRE_USR'])) {
+        $name = $user['NOMBRE_USR'];
+    } elseif (!empty($user['nombre_usr'])) {
+        $name = $user['nombre_usr'];
+    } elseif (!empty($user['nombreUsr'])) {
+        $name = $user['nombreUsr'];
+    } elseif ((!empty($user['NOMBRES']) || !empty($user['APELLIDOS']))) {
+        $name = trim(($user['NOMBRES'] ?? '') . ' ' . ($user['APELLIDOS'] ?? ''));
+    }
+
+    $role = $user['NOM_TIPO'] ?? $user['nom_tipo'] ?? 'Usuario';
+    
+    $avatar = asset('vendor/adminlte/img/user2-160x160.jpg');
 @endphp
 <li class="nav-item dropdown user-menu">
     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-        <img src="{{ $avatar }}" class="user-image rounded-circle shadow" alt="{{ $name }}" width="30" height="30">
         <span class="d-none d-md-inline">{{ $name }}</span>
     </a>
     <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
         {{-- Header --}}
-        <li class="user-header text-bg-primary">
+        <li class="user-header text-bg-primary" style="background-color: #0d1b2a !important;">
             <img src="{{ $avatar }}" class="rounded-circle shadow" alt="{{ $name }}" width="90" height="90">
             <p>
                 {{ $name }}
-                @if ($memberSince)<small>{{ __('adminlte.member_since') }} {{ $memberSince }}</small>@endif
+                <small>{{ $role }}</small>
             </p>
         </li>
-        {{-- Body --}}
-        <li class="user-body">
-            <div class="row">
-                <div class="col-4 text-center"><a href="#">{{ __('adminlte.followers') }}</a></div>
-                <div class="col-4 text-center"><a href="#">{{ __('adminlte.sales') }}</a></div>
-                <div class="col-4 text-center"><a href="#">{{ __('adminlte.friends') }}</a></div>
-            </div>
-        </li>
         {{-- Footer --}}
-        <li class="user-footer">
-            <a href="{{ url(config('adminlte.usermenu_profile_url') ?: 'admin/profile') }}" class="btn btn-outline-secondary">
-                {{ __('adminlte.profile') }}
+        <li class="user-footer text-center">
+            <a href="{{ route('logout') }}" class="btn btn-outline-danger w-100">
+                <i class="bi bi-box-arrow-right me-1"></i> Cerrar Sesión
             </a>
-            <a href="#" class="btn btn-outline-danger float-end"
-               onclick="event.preventDefault(); document.getElementById('adminlte-logout-form').submit();">
-                {{ __('adminlte.sign_out') }}
-            </a>
-            <form id="adminlte-logout-form" action="{{ url('logout') }}" method="POST" class="d-none">@csrf</form>
         </li>
     </ul>
 </li>

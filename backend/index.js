@@ -7,16 +7,16 @@ const db = require('./config/db');
 
 app.use(bp.json());
 
-// rutas del modulo de reservacion
+// rutas del modulo de reservacion y prefijo de las rutas del modulo RE
 const reservacionRoutes = require('./routes/reservacionRoutes');
-
-// prefijo de las rutas del modulo re
 app.use('/api/re', reservacionRoutes);
+
 //prefijo de las rutas del modulo de ventas
 app.use(
     '/api',
     require('./routes/ventasRoutes')
 );
+
 //prefijo de las rutas del modulo de personas
 app.use(
     '/api',
@@ -31,7 +31,11 @@ app.use('/api/in', inventarioRoutes);
 const reportesRoutes = require('./routes/reportesRoutes');
 app.use('/api', reportesRoutes);
 
+//rutas para el login, registro y validación de nombre de usuario
+const authRoutes = require('./routes/authRoutes');
+app.use('/api/auth', authRoutes);
 
+//mensaje que muestra si el servidor esta activo en el puerto 3000
 app.listen(3000, () => {
     console.log('Server is running on port 3000');
 });

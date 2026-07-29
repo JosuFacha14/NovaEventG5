@@ -80,17 +80,6 @@
                                         data-bs-target="#modalEditarEmpleado">
                                     <i class="bi bi-pencil-fill"></i>
                                 </button>
-                                {{-- Soft-Delete --}}
-                                <form method="POST"
-                                      action="{{ url('empleados/' . $e['COD_PERSONA']) }}"
-                                      class="d-inline form-soft-delete">
-                                    @csrf
-                                    @method('PUT')
-                                    <input type="hidden" name="accion" value="SOFT_DELETE">
-                                    <button type="submit" class="btn btn-danger btn-sm" title="Desactivar">
-                                        <i class="bi bi-person-slash"></i>
-                                    </button>
-                                </form>
                             </td>
                         </tr>
                     @empty
@@ -245,12 +234,6 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('editSalario').value         = this.dataset.salario;
             document.getElementById('formEditarEmpleado').action =
                 '{{ url("empleados") }}/' + this.dataset.id;
-        });
-    });
-
-    document.querySelectorAll('.form-soft-delete').forEach(function (form) {
-        form.addEventListener('submit', function (e) {
-            if (!confirm('¿Desactivar este empleado del sistema?')) { e.preventDefault(); }
         });
     });
 
