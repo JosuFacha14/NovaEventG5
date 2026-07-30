@@ -24,7 +24,7 @@
 <div class="card border-0 shadow-sm mb-4 overflowhidden"
      style="background: linear-gradient(120deg, #0d1b2a 0%, #1a2f4a 60%, #162840 100%);">
     <div class="card-body py-3 px-4 d-flex align-items-center gap-4">
-        <img src="{{ asset('images/NovaEvent.jpeg') }}"
+        <img src="{{ asset('images/novaeventLogo.png') }}"
              alt="NovaEvent Logo"
              class="rounded shadow-sm flex-shrink-0"
              style="width: 64px; height: 64px; object-fit: cover;">
