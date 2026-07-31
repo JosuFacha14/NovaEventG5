@@ -32,6 +32,14 @@ const db = require('./config/db');
 //creacion de apis apuntando a los procedimientos,
 //creacion de las interfaces utilizando LARAVEL 13+ADMINLTE 4 para consumir dichas apis
 
+
+//para encender los servicios
+//npm run dev /frontend
+//php artisan serve /frontend
+//node index /backend
+
+//crear las tablas y los procedimientos almacenados de
+
 app.use(bp.json());
 
 // rutas del modulo de reservacion y prefijo de las rutas del modulo RE
